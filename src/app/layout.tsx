@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
 import site from "@/data/site.json";
 import { MobileNav } from "@/components/MobileNav";
+import { PageGlowBackground } from "@/components/animations/Animations";
 import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return <html lang="en"><body className={`${inter.variable} ${mono.variable} flex min-h-screen flex-col font-sans antialiased`}>
+    <PageGlowBackground />
     <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-60 focus:bg-foreground focus:p-3 focus:text-background">Skip to content</a>
     <header className="sticky top-0 z-50 border-b border-line bg-background">
       <div className="mx-auto flex min-h-18 max-w-6xl items-center justify-between gap-3 px-5 sm:px-6">
