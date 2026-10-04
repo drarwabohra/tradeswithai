@@ -1,0 +1,14 @@
+{
+  "url": "https://tradeswithai.com",
+  "brandName": "TradesWithAI",
+  "upiId": "example@upi",
+  "payeeName": "Trades With AI",
+  "whatsappNumber": "918529261547",
+  "supportEmail": "kausarbohra73@gmail.com",
+  "deliveryHours": "12 hours",
+  "bankDetails": {
+    "accountName": "Trades With AI",
+    "accountNumber": "1234567890",
+    "ifsc": "HDFC0001234"
+  }
+}

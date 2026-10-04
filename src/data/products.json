@@ -1,0 +1,156 @@
+[
+  {
+    "id": "breakout-screener",
+    "name": "Stock Breakout Screener",
+    "price": 5000,
+    "currency": "INR",
+    "shortDescription": "Scan NSE and US stocks for breakout candidates. Rank the shortlist by relative volume and breakout percentage.",
+    "thumbnail": "/products/breakout/thumbainl.png",
+    "gallery": [
+      "/products/breakout/3c0301ec-06b7-4cd1-9e67-ed6387a1a770.png",
+      "/products/breakout/6a240024-946a-4920-acc0-f6f8d0e75c28.png",
+      "/products/breakout/e067fc0b-5b5d-4e5f-ac7f-7ba4703be8a2.png"
+    ],
+    "video": "/products/breakout/breakout screenr.mp4",
+    "features": [
+      "Scan NSE and US stocks",
+      "Rank candidates by relative volume and breakout percentage",
+      "Set minimum relative volume and average daily volume",
+      "Choose the consolidation lookback period",
+      "Send alerts to Telegram with your own bot"
+    ],
+    "setupRequirements": "Python 3.10+, Telegram Bot Token (optional)",
+    "whatYouGet": "Complete source code, installation guide, and setup instructions.",
+    "faqs": [
+      {
+        "question": "Does it trade automatically?",
+        "answer": "No, this is a screener that alerts you to potential setups for your review."
+      },
+      {
+        "question": "Can I use it on Mac or Windows?",
+        "answer": "Yes, it runs on any system supporting Python."
+      }
+    ]
+  },
+  {
+    "id": "falling-wedge-screener",
+    "name": "Falling Wedge Screener",
+    "price": 5000,
+    "currency": "INR",
+    "shortDescription": "Find falling wedge patterns in NIFTY 500 and S&P 500 stocks. Inspect each pattern on a candlestick chart.",
+    "thumbnail": "/products/wedge/upwork_wedge_thumbnail_4x3.png",
+    "gallery": [
+      "/products/wedge/upwork_wedge_pattern_detail_4x3.png",
+      "/products/wedge/upwork_wedge_screening_4x3.png"
+    ],
+    "video": "/products/wedge/Recording 2026-08-26 203217.mp4",
+    "features": [
+      "Scan NIFTY 500 and S&P 500 stocks",
+      "Score pattern fit from 0 to 100; this is not a probability of profit",
+      "Scan 15-minute, 1-hour, 4-hour, and daily charts",
+      "View detected wedges on candlestick charts",
+      "Inspect containment, convergence, and downslope metrics"
+    ],
+    "setupRequirements": "Python 3.10+, FastAPI, Node.js for frontend",
+    "whatYouGet": "Complete source code (Python FastAPI backend, React frontend) and setup guide.",
+    "faqs": [
+      {
+        "question": "Is it a live feed?",
+        "answer": "Refresh frequency and data delay depend on the market data source you configure."
+      }
+    ]
+  },
+  {
+    "id": "crypto-breakout-scanner",
+    "name": "Crypto Breakout Scanner",
+    "price": 5000,
+    "currency": "INR",
+    "shortDescription": "Screen Hyperliquid perpetuals using relative volume, EMA alignment, and VWAP. Send matching entries to Telegram.",
+    "thumbnail": "/products/crypto/upwork_crypto_cover_4x3.png",
+    "gallery": [
+      "/products/crypto/tn.png",
+      "/products/crypto/upwork_crypto_filters_4x3.png",
+      "/products/crypto/upwork_crypto_workflow_4x3.png"
+    ],
+    "video": "/products/crypto/crypto.mp4",
+    "features": [
+      "Scan Hyperliquid crypto perpetuals",
+      "Filter by relative volume, EMA alignment, and VWAP",
+      "Compare charts across timeframes",
+      "Refresh scans and send Telegram alerts",
+      "Set thresholds for 24-hour price change and recent momentum"
+    ],
+    "setupRequirements": "Python 3.10+, Telegram Bot Token (optional)",
+    "whatYouGet": "Complete source code and instructions to run the screener locally.",
+    "faqs": [
+      {
+        "question": "Does it require API keys for data?",
+        "answer": "It uses Hyperliquid's public API, no keys required for data."
+      }
+    ]
+  },
+  {
+    "id": "insider-trading-screener",
+    "name": "Insider Transactions Dashboard",
+    "price": 5000,
+    "currency": "INR",
+    "shortDescription": "Review reported insider purchases, sales, and pledges in Indian and US stocks. Filter the records and export your shortlist.",
+    "thumbnail": "/products/insider-trading-screener/thumbnail.png",
+    "gallery": [
+      "/products/insider-trading-screener/1.png",
+      "/products/insider-trading-screener/2.png"
+    ],
+    "video": "/products/insider-trading-screener/video.mp4",
+    "features": [
+      "Review reported insider transactions in India and the US",
+      "Filter purchases, sales, and pledges",
+      "Filter by role, including promoter and director",
+      "Inspect transaction flags such as off-market gifts and suspect prices",
+      "Export records to CSV or Excel"
+    ],
+    "setupRequirements": "Python 3.10+, Node.js for frontend",
+    "whatYouGet": "Complete source code (backend and frontend) and setup instructions.",
+    "faqs": [
+      {
+        "question": "Does it track live filings?",
+        "answer": "Yes, it tracks the latest filings from official exchanges."
+      },
+      {
+        "question": "Can I export the data?",
+        "answer": "Yes, there is a built-in export to CSV and Excel feature."
+      }
+    ]
+  },
+  {
+    "id": "momentum-value-screener",
+    "name": "Momentum & Valuation Screener",
+    "price": 5000,
+    "currency": "INR",
+    "shortDescription": "Filter NIFTY 500 and S&P 500 stocks by P/E, trading volume, and RSI. Review the resulting watchlist using delayed market data.",
+    "thumbnail": "/products/momentum-value-screener/thumbnail.png",
+    "gallery": [
+      "/products/momentum-value-screener/1.png",
+      "/products/momentum-value-screener/2.png"
+    ],
+    "video": "/products/momentum-value-screener/video.mp4",
+    "features": [
+      "Scan NIFTY 500 and S&P 500 stocks",
+      "Apply defaults of P/E below 20, volume above twice its average, and RSI above 50",
+      "Rank the stocks that match the configured filters",
+      "Sort results in an interactive watchlist",
+      "Review valuation and momentum filters in one view"
+    ],
+    "setupRequirements": "Python 3.10+, Node.js for frontend",
+    "whatYouGet": "Complete source code (Python data engine, React frontend) and setup instructions.",
+    "faqs": [
+      {
+        "question": "Does it use real-time data?",
+        "answer": "It uses delayed data via Yahoo Finance to find end-of-day or intraday volume spikes."
+      },
+      {
+        "question": "Can I change the filters?",
+        "answer": "Yes. The source code is included, so you can edit the P/E, volume, and RSI thresholds. This requires working with the code."
+      }
+    ]
+  }
+]

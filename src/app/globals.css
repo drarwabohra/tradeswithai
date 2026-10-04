@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #101113;
+  --color-foreground: #f5f4f0;
+  --color-surface: #191b1e;
+  --color-muted: #b4b4ad;
+  --color-line: #3a3c40;
+  --color-accent: #c8d8aa;
+  --color-ink-950: #101113;
+  --color-ink-900: #191b1e;
+  --color-ink-800: #24262a;
+}
+@theme inline {
+  --font-sans: var(--font-inter), Arial, sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+}
+@layer base {
+  html { color-scheme: dark; scroll-padding-top: 6rem; }
+  body { background: var(--color-background); color: var(--color-foreground); }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  input, textarea, select { font-size: 1rem; }
+  button:not(:disabled), summary { cursor: pointer; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+}
+@layer components {
+  .button-primary, .button-secondary {
+    display: inline-flex; min-height: 3rem; align-items: center; justify-content: center;
+    gap: .5rem; padding: .75rem 1.25rem; border-radius: .375rem;
+    font-size: .9375rem; font-weight: 600;
+    transition: background-color 150ms, color 150ms, transform 150ms;
+  }
+  .button-primary { background: var(--color-foreground); color: var(--color-background); }
+  .button-primary:hover { background: var(--color-accent); }
+  .button-secondary { border: 1px solid var(--color-line); color: var(--color-foreground); }
+  .button-secondary:hover { background: var(--color-surface); }
+  .button-primary:active, .button-secondary:active { transform: translateY(1px); }
+  .button-primary:disabled, .button-secondary:disabled { opacity: .55; cursor: wait; }
+  .field { width: 100%; min-height: 3rem; border: 1px solid var(--color-line);
+    border-radius: .375rem; padding: .75rem; background: var(--color-background); }
+  .field[aria-invalid="true"] { border-color: #fca5a5; }
+  .icon-button { display: inline-flex; min-width: 2.75rem; min-height: 2.75rem;
+    align-items: center; justify-content: center; border-radius: .375rem; }
+  .icon-button:hover { background: var(--color-surface); }
+}
+@media (max-width: 1023px) {
+  html:has([data-buybar]) { scroll-padding-bottom: var(--buybar-height, calc(6rem + env(safe-area-inset-bottom))); }
+  body:has([data-buybar]) #site-footer { padding-bottom: var(--buybar-height, calc(6rem + env(safe-area-inset-bottom))); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
