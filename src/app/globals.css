@@ -10,6 +10,12 @@
   --color-ink-950: #101113;
   --color-ink-900: #191b1e;
   --color-ink-800: #24262a;
+
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 15px rgba(37,211,102,0.4); }
+    50% { box-shadow: 0 0 30px rgba(37,211,102,1); }
+  }
 }
 @theme inline {
   --font-sans: var(--font-inter), Arial, sans-serif;

@@ -41,7 +41,7 @@ export default async function ProductPage({ params }: Props) {
           <p className="font-mono text-2xl">{formatINR(product.price)} <span className="font-sans text-sm text-muted">one-time payment</span></p>
           <p className="mt-3 text-sm leading-6 text-muted">{product.whatYouGet}</p>
           <p className="mt-3 text-sm leading-6">Requires {product.setupRequirements}.</p>
-          <Link className="button-primary mt-4" href={`/checkout/${product.id}`}>Buy screener</Link>
+          <a className="button-primary mt-4" href={`https://wa.me/918529261547?text=${encodeURIComponent('Hi, I want to acquire ' + product.name + '.')}`}>Inquire on WhatsApp</a>
         </section>
         <section className="mt-10" aria-labelledby="demo-heading">
           <h2 id="demo-heading" className="text-2xl font-medium">See it in use.</h2>
@@ -61,17 +61,17 @@ export default async function ProductPage({ params }: Props) {
         </section>
         <section className="mt-12 border-t border-line pt-8"><h2 className="text-2xl font-medium">What it does.</h2><ul className="mt-5 space-y-3">{product.features.map(feature => <li key={feature} className="border-b border-line pb-3 text-sm leading-6 text-muted">{feature}</li>)}</ul></section>
         <section className="mt-12 border-t border-line pt-8"><h2 className="text-2xl font-medium">Before you buy.</h2><p className="mt-4 leading-7">{product.setupRequirements}</p><p className="mt-4 text-sm leading-6 text-muted">This is software you install and run yourself. It does not place trades. Review the <Link href="/refund-policy" className="underline underline-offset-4">refund policy</Link> and ask us about setup if anything is unclear.</p></section>
-        <section className="mt-12 border-t border-line pt-8"><h2 className="text-2xl font-medium">What you receive.</h2><p className="mt-4 leading-7 text-muted">{product.whatYouGet}</p><p className="mt-4 text-sm leading-6 text-muted">Pay by UPI and submit the payment reference. We check the payment manually, then email the files. Target delivery: within {site.deliveryHours} of reference submission.</p></section>
-        <section className="mt-12 border-t border-line pt-8"><h2 className="text-2xl font-medium">Questions before checkout.</h2><div className="mt-4 divide-y divide-line">{product.faqs.map(faq => <details key={faq.question} className="py-2"><summary className="flex min-h-12 items-center font-medium">{faq.question}</summary><p className="pb-4 text-sm leading-7 text-muted">{faq.answer}</p></details>)}<details className="py-2"><summary className="flex min-h-12 items-center font-medium">My files have not arrived. What should I do?</summary><p className="pb-4 text-sm leading-7 text-muted">Email {site.supportEmail} or contact us on WhatsApp with your order ID and UPI reference.</p></details></div></section>
+        <section className="mt-12 border-t border-line pt-8"><h2 className="text-2xl font-medium">What you receive.</h2><p className="mt-4 leading-7 text-muted">{product.whatYouGet}</p><p className="mt-4 text-sm leading-6 text-muted">Message us on WhatsApp to get payment details. We verify the payment manually, then instantly send the files to you via WhatsApp or Email.</p></section>
+        <section className="mt-12 border-t border-line pt-8"><h2 className="text-2xl font-medium">Questions before purchase.</h2><div className="mt-4 divide-y divide-line">{product.faqs.map(faq => <details key={faq.question} className="py-2"><summary className="flex min-h-12 items-center font-medium">{faq.question}</summary><p className="pb-4 text-sm leading-7 text-muted">{faq.answer}</p></details>)}<details className="py-2"><summary className="flex min-h-12 items-center font-medium">My files have not arrived. What should I do?</summary><p className="pb-4 text-sm leading-7 text-muted">Contact us directly on WhatsApp and we will send them to you instantly.</p></details></div></section>
       </div>
       <aside className="sticky top-24 hidden rounded-md border border-line bg-surface p-6 lg:block" aria-label="Purchase summary">
         <p className="text-sm text-muted">One-time payment</p><p className="mt-3 font-mono text-4xl">{formatINR(product.price)}</p>
         <p className="mt-5 text-sm leading-6 text-muted">{product.whatYouGet}</p>
         <p className="mt-5 border-t border-line pt-5 text-sm leading-6">Requires {product.setupRequirements}.</p>
-        <Link href={`/checkout/${product.id}`} className="button-primary mt-6 w-full">Buy screener</Link>
-        <p className="mt-4 text-xs leading-6 text-muted">Manual UPI payment verification. Target delivery within {site.deliveryHours} of reference submission.</p>
+        <a href={`https://wa.me/918529261547?text=${encodeURIComponent('Hi, I want to acquire ' + product.name + '.')}`} className="button-primary mt-6 w-full">Inquire on WhatsApp</a>
+        <p className="mt-4 text-xs leading-6 text-muted">Direct WhatsApp payment verification. Instant delivery.</p>
         <Link href="/contact" className="mt-3 flex min-h-11 items-center text-sm underline underline-offset-4">Ask about setup</Link>
       </aside>
-    </div><BuyBar id={product.id} price={product.price} />
+    </div><BuyBar id={product.id} price={product.price} name={product.name} />
   </div>;
 }

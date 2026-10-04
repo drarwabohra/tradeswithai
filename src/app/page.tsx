@@ -30,9 +30,9 @@ export default function Home() {
     <section aria-labelledby="purchase-heading" className="border-t border-line py-14">
       <h2 id="purchase-heading" className="text-3xl font-medium tracking-tight">From payment to setup.</h2>
       <ol className="mt-8 grid gap-8 md:grid-cols-3">
-        {[ ["01", "Pay by UPI", "Check the product’s requirements, enter your email, and pay from your bank app."],
-           ["02", "Send the reference", "Submit the 12-digit UPI reference here. Payment is checked manually."],
-           ["03", "Receive the files", `We check the payment, then email the code and setup guide. Target: within ${site.deliveryHours} of reference submission.`]
+        {[ ["01", "Message us on WhatsApp", "Click the glowing WhatsApp icon or 'Buy screener' button to send us a message."],
+           ["02", "Complete Payment", "We will guide you through the setup requirements and provide our direct payment details."],
+           ["03", "Receive the files", `Once payment is confirmed, we instantly send the code and setup guide to your email or WhatsApp.`]
         ].map(([n, title, copy]) => <li key={n} className="border-t border-line pt-5"><span className="font-mono text-sm text-muted">{n}</span><h3 className="mt-3 text-lg font-medium">{title}</h3><p className="mt-2 text-sm leading-6 text-muted">{copy}</p></li>)}
       </ol>
     </section>
