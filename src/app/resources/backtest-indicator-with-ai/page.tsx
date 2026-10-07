@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Copy, Download, ArrowLeft, Bot, CheckCircle2 } from "lucide-react";
+import { Download, ArrowLeft, Bot } from "lucide-react";
 import { CopyButton } from "@/components/CopyButton";
 
 export const metadata = {
-  title: "Backtest any Indicator using Claude AI | TradesWithAI",
+  title: "Backtest any indicator using Claude AI",
   description: "The exact prompt to turn any indicator into a fully backtested Python strategy.",
 };
 
@@ -33,53 +33,54 @@ OUTPUT CONTRACT — Render everything as ONE self-contained \`.html\` file calle
 
 export default function ArticlePage() {
   return (
-    <div className="container mx-auto px-4 py-16 sm:py-20 max-w-4xl">
-      <Link href="/resources" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 mb-10 transition-colors text-sm font-medium">
+    <div className="document-page container mx-auto px-4 py-16 sm:py-20 max-w-4xl">
+      <Link href="/resources" className="inline-flex items-center gap-2 text-muted hover:text-foreground mb-10 text-sm font-medium">
         <ArrowLeft size={16} /> Back to Resources
       </Link>
       
       <header className="mb-12 border-b border-line pb-12">
-        <div className="text-xs font-medium uppercase tracking-[0.18em] text-emerald-400/90 mb-4">AI Prompt</div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6 text-zinc-50 leading-tight">
+        <div className="text-xs font-medium uppercase tracking-[0.18em] text-muted mb-4">AI Prompt</div>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6 text-foreground leading-tight">
           Backtest any Trading Indicator using Claude AI
         </h1>
-        <p className="text-lg text-zinc-400 leading-relaxed text-pretty">
+        <p className="text-lg text-muted leading-relaxed text-pretty">
           Turn any indicator (MACD, RSI, VWAP, Supertrend, etc.) into a professional strategy backtest with a beautiful HTML report. No Pine Script required.
         </p>
       </header>
 
-      <div className="prose prose-invert prose-emerald max-w-none">
+      <div className="prose prose-invert max-w-none">
         
-        <h2 className="text-2xl font-semibold text-zinc-50 mt-10 mb-4 tracking-tight">How it works</h2>
-        <p className="text-zinc-400 leading-relaxed mb-6">
+        <h2 className="text-2xl font-semibold text-foreground mt-10 mb-4 tracking-tight">How it works</h2>
+        <p className="text-muted leading-relaxed mb-6">
           Writing backtesting code from scratch takes hours. By leveraging Claude 3.5 Sonnet or ChatGPT, you can generate a complete Python backtesting engine using libraries like <code>vectorbt</code> or <code>backtrader</code> in seconds. 
         </p>
-        <p className="text-zinc-400 leading-relaxed mb-8">
+        <p className="text-muted leading-relaxed mb-8">
           The prompt below explicitly instructs the AI to fetch its own historical data from Yahoo Finance, simulate the strategy, and render an interactive HTML performance report so you can visually analyze the results.
         </p>
 
-        <h2 className="text-2xl font-semibold text-zinc-50 mt-10 mb-6 tracking-tight flex items-center gap-2">
-          <Bot size={24} className="text-emerald-400" /> The Master Prompt
+        <h2 className="text-2xl font-semibold text-foreground mt-10 mb-6 tracking-tight flex items-center gap-2">
+          <Bot size={24} className="text-muted" /> The Master Prompt
         </h2>
         
-        <div className="relative group rounded-xl bg-ink-900 border border-line overflow-hidden mb-12">
-          <div className="absolute right-3 top-3 z-10">
+        <div className="document-panel relative group overflow-hidden mb-12">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
+            <span className="text-xs font-mono text-muted">COPY THE PROMPT TO GET STARTED</span>
             <CopyButton value={promptText} label="Master Prompt" />
           </div>
-          <pre className="p-6 overflow-x-auto text-sm text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed m-0 bg-transparent">
+          <pre className="p-5 sm:p-6 overflow-x-auto text-sm text-foreground font-mono whitespace-pre-wrap wrap-anywhere leading-relaxed m-0 bg-transparent">
             {promptText}
           </pre>
         </div>
 
-        <h2 className="text-2xl font-semibold text-zinc-50 mt-12 mb-4 tracking-tight">What does the output look like?</h2>
-        <p className="text-zinc-400 leading-relaxed mb-8">
+        <h2 className="text-2xl font-semibold text-foreground mt-12 mb-4 tracking-tight">What does the output look like?</h2>
+        <p className="text-muted leading-relaxed mb-8">
           When you run the generated Python script, it will create a beautiful, interactive HTML dashboard containing your equity curve, drawdowns, and key metrics like CAGR and Sharpe Ratio. 
         </p>
 
-        <div className="bg-linear-to-b from-white/[0.04] to-white/[0.01] border border-line shadow-[inset_0_1px_0_0_rgb(255_255_255/0.06)] rounded-2xl p-8 mb-12 flex flex-col md:flex-row items-center gap-8 justify-between">
+        <div className="document-panel p-8 mb-12 flex flex-col md:flex-row items-center gap-8 justify-between">
           <div>
-            <h3 className="text-xl font-semibold text-zinc-50 mb-2">Download Sample Report</h3>
-            <p className="text-zinc-400 text-sm max-w-md leading-relaxed">
+            <h3 className="text-xl font-semibold text-foreground mb-2">Download Sample Report</h3>
+            <p className="text-muted text-sm max-w-md leading-relaxed">
               We used this exact prompt to backtest a <strong>Supertrend</strong> strategy. Download the generated PDF report to see the quality of the output.
             </p>
           </div>
@@ -87,7 +88,7 @@ export default function ArticlePage() {
             href="/resources/super-trend-strategy-report.pdf" 
             target="_blank"
             download
-            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-white text-ink-950 h-12 px-6 text-[15px] font-semibold shadow-[0_8px_24px_-6px_rgb(255_255_255/0.2)] hover:bg-zinc-200 active:scale-[0.98] transition-all"
+            className="button-primary shrink-0"
           >
             <Download size={18} /> Download Sample PDF
           </a>

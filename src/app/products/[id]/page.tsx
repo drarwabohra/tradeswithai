@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: Props) {
     offers: { "@type": "Offer", price: product.price, priceCurrency: "INR",
       url: new URL(`/products/${product.id}`, site.url).href },
   };
-  return <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 sm:py-14">
+  return <div className="product-page site-container py-10 sm:py-14">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
     <Link href="/products" className="inline-flex min-h-11 items-center text-sm text-muted">← All screeners</Link>
     <div className="mt-5 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_340px]">
@@ -41,12 +41,12 @@ export default async function ProductPage({ params }: Props) {
           <p className="font-mono text-2xl">{formatINR(product.price)} <span className="font-sans text-sm text-muted">one-time payment</span></p>
           <p className="mt-3 text-sm leading-6 text-muted">{product.whatYouGet}</p>
           <p className="mt-3 text-sm leading-6">Requires {product.setupRequirements}.</p>
-          <a className="button-primary mt-4" href={`https://wa.me/918529261547?text=${encodeURIComponent('Hi, I want to acquire ' + product.name + '.')}`}>Inquire on WhatsApp</a>
+          <a className="button-primary mt-4" href={`https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent('Hi, I want to acquire ' + product.name + '.')}`}>Inquire on WhatsApp</a>
         </section>
         <section className="mt-10" aria-labelledby="demo-heading">
           <h2 id="demo-heading" className="text-2xl font-medium">See it in use.</h2>
           <div className="mt-5 aspect-[4/3] overflow-hidden rounded-md border border-line bg-surface">
-            <video src={product.video} controls playsInline preload="none" poster={product.gallery[0] ?? product.thumbnail}
+            <video src={product.video} controls playsInline preload="none" poster={`${product.video.slice(0, product.video.lastIndexOf("/"))}/poster.webp`}
               aria-label={`${product.name} demonstration`} className="h-full w-full object-contain">
               <a href={product.video}>Download the demo video</a>
             </video>
@@ -68,10 +68,10 @@ export default async function ProductPage({ params }: Props) {
         <p className="text-sm text-muted">One-time payment</p><p className="mt-3 font-mono text-4xl">{formatINR(product.price)}</p>
         <p className="mt-5 text-sm leading-6 text-muted">{product.whatYouGet}</p>
         <p className="mt-5 border-t border-line pt-5 text-sm leading-6">Requires {product.setupRequirements}.</p>
-        <a href={`https://wa.me/918529261547?text=${encodeURIComponent('Hi, I want to acquire ' + product.name + '.')}`} className="button-primary mt-6 w-full">Inquire on WhatsApp</a>
+        <a href={`https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent('Hi, I want to acquire ' + product.name + '.')}`} className="button-primary mt-6 w-full">Inquire on WhatsApp</a>
         <p className="mt-4 text-xs leading-6 text-muted">Direct WhatsApp payment verification. Instant delivery.</p>
         <Link href="/contact" className="mt-3 flex min-h-11 items-center text-sm underline underline-offset-4">Ask about setup</Link>
       </aside>
-    </div><BuyBar id={product.id} price={product.price} name={product.name} />
+    </div><BuyBar price={product.price} name={product.name} />
   </div>;
 }

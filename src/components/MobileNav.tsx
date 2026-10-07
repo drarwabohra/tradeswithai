@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 export function MobileNav() {
   const [expandedPath, setExpandedPath] = useState<string | null>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -26,13 +27,12 @@ export function MobileNav() {
   return <div ref={root} className="relative md:hidden" onBlur={event => {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setExpandedPath(null);
   }}>
-    <button ref={trigger} type="button" className="button-secondary" aria-expanded={open}
-      aria-controls="mobile-links" onClick={() => setExpandedPath(open ? null : pathname)}>Menu</button>
+    <button ref={trigger} type="button" className="icon-button border border-line" aria-expanded={open}
+      aria-label={open ? "Close menu" : "Open menu"}
+      aria-controls="mobile-links" onClick={() => setExpandedPath(open ? null : pathname)}>{open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}</button>
     <nav id="mobile-links" aria-label="Mobile navigation" hidden={!open}
-      className="absolute right-0 top-full mt-2 w-56 rounded-md border border-line bg-background p-2">
-      <Link onClick={() => setExpandedPath(null)} className="flex min-h-12 items-center px-3 hover:bg-surface" href="/products">Screeners</Link>
-      <Link onClick={() => setExpandedPath(null)} className="flex min-h-12 items-center px-3 hover:bg-surface" href="/resources">Free Resources</Link>
-      <Link onClick={() => setExpandedPath(null)} className="flex min-h-12 items-center px-3 hover:bg-surface" href="/contact">Contact</Link>
+      className="mobile-menu">
+      {[["/products", "Screeners"], ["/resources", "Free resources"], ["/contact", "Contact & setup"]].map(([href, label]) => <Link key={href} onClick={() => setExpandedPath(null)} aria-current={pathname.startsWith(href) ? "page" : undefined} href={href}>{label}<ArrowUpRight size={16} aria-hidden="true" /></Link>)}
     </nav>
   </div>;
 }
