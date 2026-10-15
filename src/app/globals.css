@@ -461,15 +461,15 @@ footer a {
   box-shadow: 0 0 35px rgba(37, 211, 102, 0.7);
 }
 
-/* No pinning on small screens, touch-portrait, or reduced motion */
-@media (max-width: 860px), (prefers-reduced-motion: reduce) {
+/* No pinning on tablets, mobile, or reduced motion */
+@media (max-width: 1024px), (prefers-reduced-motion: reduce) {
   .pin {
     height: auto !important;
   }
   .pin-stage {
     position: relative;
     height: auto;
-    min-height: 100svh;
+    min-height: auto;
   }
   .pin,
   .pin * {

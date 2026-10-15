@@ -6,6 +6,7 @@ import {
   TheFullShelf,
   StepByStep,
   FreeLibrary,
+  BuilderInfo,
   Final,
 } from "@/components/home/Chapters";
 
@@ -37,6 +38,7 @@ export default function Home() {
       <TheFullShelf />
       <StepByStep />
       <FreeLibrary />
+      <BuilderInfo />
       <Final />
     </div>
   );

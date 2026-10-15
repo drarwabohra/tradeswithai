@@ -208,29 +208,37 @@ export function Marquee({ items }: { items: string[] }) {
 /** Types a list of phrases into a fake input, then deletes and moves on. */
 export function useTyping(phrases: string[], active = true) {
   const [text, setText] = useState("");
+  const phrasesRef = useRef(phrases);
+  phrasesRef.current = phrases;
+
   useEffect(() => {
-    if (!active) return;
+    if (!active || phrasesRef.current.length === 0) return;
     let i = 0;
     let n = 0;
     let deleting = false;
     let timer: ReturnType<typeof setTimeout>;
+
     const tick = () => {
-      const full = phrases[i % phrases.length];
+      const list = phrasesRef.current;
+      const full = list[i % list.length];
       n += deleting ? -1 : 1;
       setText(full.slice(0, n));
-      let wait = deleting ? 22 : 48;
-      if (!deleting && n === full.length) {
+
+      let wait = deleting ? 24 : 50;
+      if (!deleting && n >= full.length) {
         deleting = true;
-        wait = 1800;
-      } else if (deleting && n === 0) {
+        wait = 2000;
+      } else if (deleting && n <= 0) {
         deleting = false;
-        i++;
-        wait = 400;
+        i = (i + 1) % list.length;
+        wait = 450;
       }
       timer = setTimeout(tick, wait);
     };
-    timer = setTimeout(tick, 600);
+
+    timer = setTimeout(tick, 500);
     return () => clearTimeout(timer);
-  }, [phrases, active]);
+  }, [active]);
+
   return text;
 }

@@ -33,15 +33,8 @@ function Head({
   );
 }
 
-/* ── 01 · Proof: Stats + Marquee ─────────────────────────── */
+/* ── 01 · Why it works: Stats + Marquee ──────────────────── */
 export function Proof() {
-  const stats = [
-    { v: 5, d: 0, s: "", prefix: "", l: "Screeners Shipped" },
-    { v: 100, d: 0, s: "%", prefix: "", l: "Source Code Ownership" },
-    { v: 5000, d: 0, s: "", prefix: "₹", l: "Flat One-Time Price" },
-    { v: 12, d: 0, s: "h", prefix: "", l: "Sent within 12h (usually <1h)" },
-  ];
-
   return (
     <section
       id="proof"
@@ -51,26 +44,45 @@ export function Proof() {
         <Reveal>
           <Head
             n="01"
-            label="BUILT FOR TRADERS"
+            label="WHY IT WORKS"
             title={
               <>
                 Every screener starts as <span className="text-cyan">one testable rule.</span>
               </>
             }
-            sub="Then it becomes a Python data engine, interactive chart filters, Telegram bot alerts, and clean documentation you own forever."
+            sub="Then it becomes a Python data engine, interactive chart filters, clean documentation you own forever, and, on some screeners, Telegram alerts."
           />
         </Reveal>
 
         <div className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline md:grid-cols-4 min-h-[148px]">
-          {stats.map((s, i) => (
-            <Reveal key={s.l} delay={i * 90} className="bg-deep p-7 min-h-[148px] flex flex-col justify-center">
-              <p className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold tracking-tight text-ink font-mono flex items-baseline min-h-[1.2em]">
-                {s.prefix && <span className="mr-0.5">{s.prefix}</span>}
-                <CountUp to={s.v} decimals={s.d} suffix={s.s} />
-              </p>
-              <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-dim">{s.l}</p>
-            </Reveal>
-          ))}
+          <Reveal delay={0} className="bg-deep p-7 min-h-[148px] flex flex-col justify-center">
+            <p className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold tracking-tight text-ink font-mono flex items-baseline min-h-[1.2em]">
+              <span>5</span>
+            </p>
+            <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-dim">Screeners</p>
+          </Reveal>
+
+          <Reveal delay={90} className="bg-deep p-7 min-h-[148px] flex flex-col justify-center">
+            <p className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold tracking-tight text-ink font-mono flex items-baseline min-h-[1.2em]">
+              <span>100%</span>
+            </p>
+            <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-dim">Full source code, yours to modify</p>
+          </Reveal>
+
+          {/* Static value ₹5,000 with no count-up */}
+          <Reveal delay={180} className="bg-deep p-7 min-h-[148px] flex flex-col justify-center">
+            <p className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold tracking-tight text-ink font-mono flex items-baseline min-h-[1.2em]">
+              <span>₹5,000</span>
+            </p>
+            <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-dim">Flat One-Time Price</p>
+          </Reveal>
+
+          <Reveal delay={270} className="bg-deep p-7 min-h-[148px] flex flex-col justify-center">
+            <p className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold tracking-tight text-ink font-mono flex items-baseline min-h-[1.2em]">
+              <span>12h</span>
+            </p>
+            <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-dim">Code sent within 12h (usually &lt;1h)</p>
+          </Reveal>
         </div>
       </div>
 
@@ -94,7 +106,7 @@ export function Proof() {
   );
 }
 
-/* ── 02 · Store: Pinned Conveyor Line ────────────────────── */
+/* ── 02 · Screeners: Pinned Conveyor Line ─────────────────── */
 export function ProductLine() {
   const line = catalog;
 
@@ -104,7 +116,7 @@ export function ProductLine() {
         <Reveal>
           <Head
             n="02"
-            label="THE CONVEYOR LINE"
+            label="SCREENERS"
             c="#a8e10d"
             title={
               <>
@@ -161,25 +173,25 @@ export function ProductLine() {
         </div>
       </section>
 
-      {/* Pinned horizontal conveyor belt */}
+      {/* Pinned horizontal conveyor belt (shortened scroll distance: 140vh) */}
       <Pin
-        vh={280}
+        vh={140}
         stageClassName="bg-[radial-gradient(ellipse_80%_60%_at_50%_70%,#0d3a2c_0%,var(--color-abyss)_68%)]"
       >
         {(k) => (
           <div className="flex h-full flex-col justify-center">
             <div className="px-[max(1.5rem,6vw)]">
-              <p className="eyebrow">
-                <b className="!text-lime">02</b> · ASSEMBLY CONVEYOR
+              <p className="eyebrow text-mist">
+                <span className="text-lime font-bold">ASSEMBLY CONVEYOR</span>
               </p>
               <h3 className="mt-3 text-[clamp(1.8rem,3.4vw,3rem)] font-extrabold leading-none">
                 Watch the tools roll off the line.
               </h3>
             </div>
 
-            <div className="relative mt-10 max-[860px]:overflow-x-auto">
+            <div className="relative mt-10 max-[1024px]:overflow-x-auto">
               <div
-                className="flex gap-5 px-[max(1.5rem,6vw)] will-change-transform max-[860px]:!transform-none"
+                className="flex gap-5 px-[max(1.5rem,6vw)] will-change-transform max-[1024px]:!transform-none"
                 style={{ transform: `translateX(calc(${(1 - k).toFixed(4)} * 45vw - ${k.toFixed(4)} * 75vw))` }}
               >
                 {line.map((p, i) => {
@@ -188,42 +200,24 @@ export function ProductLine() {
                     <Link
                       key={p.id}
                       href={`/products/${p.id}`}
-                      className={`card card-hover group w-80 shrink-0 p-5 transition-all duration-500 min-h-[44px] ${
-                        lit ? "border-cyan/40 shadow-xl" : "opacity-40 grayscale"
+                      onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })}
+                      className={`card card-hover group w-72 sm:w-80 shrink-0 p-5 transition-all duration-300 min-h-[44px] ${
+                        lit ? "border-cyan/40 opacity-100 shadow-xl" : "opacity-70"
                       }`}
                       style={{ ["--hc" as string]: "#41c4e1" }}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs tracking-[0.16em] text-cyan font-semibold">
-                          PYTHON SOURCE CODE
-                        </span>
-                        <span
-                          className={`h-2.5 w-2.5 rounded-full transition-all ${
-                            lit ? "bg-lime shadow-[0_0_12px_#a8e10d]" : "bg-dim"
-                          }`}
-                        />
-                      </div>
-
-                      <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden rounded-lg border border-hairline bg-surface">
+                      {/* Conveyor card shows ONLY image and name */}
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-hairline bg-surface">
                         <Image
                           src={p.thumbnail}
                           alt={p.name}
                           fill
-                          sizes="(max-width: 768px) 90vw, 400px"
+                          sizes="(max-width: 768px) 90vw, 320px"
                           priority={false}
-                          className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                          className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-
                       <p className="mt-4 text-base font-bold leading-snug text-ink">{p.name}</p>
-                      <p className="mt-2 text-xs leading-relaxed text-mist line-clamp-2">{p.shortDescription}</p>
-
-                      <div className="mt-5 flex items-center justify-between border-t border-hairline pt-3 font-mono">
-                        <span className="text-lime font-bold text-base">{formatINR(p.price)}</span>
-                        <span className="text-xs text-cyan group-hover:translate-x-1 transition-transform min-h-[44px] flex items-center">
-                          Details →
-                        </span>
-                      </div>
                     </Link>
                   );
                 })}
@@ -251,14 +245,14 @@ export function ProductLine() {
   );
 }
 
-/* ── 03 · Store Shelf: All 5 Products ────────────────────── */
+/* ── 03 · All 5 Screeners: Store Shelf ───────────────────── */
 export function TheFullShelf() {
   return (
     <section id="shelf" className="mx-auto max-w-6xl px-6 pb-28 pt-20 border-t border-hairline scroll-mt-20">
       <Reveal>
         <Head
           n="03"
-          label="THE FULL SHELF"
+          label="ALL 5 SCREENERS"
           c="#41c4e1"
           title={
             <>
@@ -324,7 +318,7 @@ export function TheFullShelf() {
   );
 }
 
-/* ── 04 · How It Works: Pinned Steps & Checklist ─────────── */
+/* ── 04 · How Buying Works: Pinned Steps & Checklist ─────── */
 const SETUP_STAGES = [
   "Message us on WhatsApp",
   "Confirm your operating system & dependencies",
@@ -340,7 +334,7 @@ export function StepByStep() {
         <Reveal>
           <Head
             n="04"
-            label="HOW IT WORKS"
+            label="HOW BUYING WORKS"
             c="#f26419"
             title={
               <>
@@ -353,8 +347,9 @@ export function StepByStep() {
         </Reveal>
       </div>
 
+      {/* Shortened pinned scroll distance: 140vh */}
       <Pin
-        vh={270}
+        vh={140}
         stageClassName="bg-[radial-gradient(ellipse_70%_60%_at_50%_60%,#2a1d10_0%,var(--color-abyss)_65%)]"
       >
         {(k) => {
@@ -362,7 +357,7 @@ export function StepByStep() {
           const done = cur >= SETUP_STAGES.length;
 
           return (
-            <div className="mx-auto grid h-full max-w-6xl items-center gap-10 px-6 py-20 md:grid-cols-[16rem_1fr_15rem] min-h-[520px]">
+            <div className="mx-auto grid h-full max-w-6xl items-center gap-10 px-6 py-16 grid-cols-1 lg:grid-cols-[16rem_1fr_15rem]">
               <div>
                 <p className="mb-3 font-mono text-xs uppercase tracking-[0.14em] text-lime font-bold">
                   Step {Math.min(cur + 1, SETUP_STAGES.length)} / {SETUP_STAGES.length}
@@ -381,9 +376,9 @@ export function StepByStep() {
                 </ol>
               </div>
 
-              {/* Progress Card with fixed min-height to eliminate layout shift */}
+              {/* Progress Card - full width below 1024px */}
               <div
-                className={`relative h-[25rem] min-h-[25rem] overflow-hidden rounded-xl border border-hairline-strong bg-[#061e29] transition-shadow duration-500 ${
+                className={`relative w-full h-[25rem] min-h-[25rem] overflow-hidden rounded-xl border border-hairline-strong bg-[#061e29] transition-shadow duration-500 ${
                   done ? "package-glow shadow-2xl" : ""
                 }`}
               >
@@ -395,9 +390,9 @@ export function StepByStep() {
                   </span>
                 </div>
                 <div className="space-y-4 p-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-bold text-ink">Order & Setup Verification</p>
-                    <span className="chip !py-0.5 !text-xs text-lime border-lime/40 min-h-[28px]">
+                    <span className="chip !py-0.5 !text-xs text-lime border-lime/40 min-h-[28px] shrink-0 whitespace-nowrap">
                       {done ? "READY FOR DOWNLOAD" : "PROCESSING"}
                     </span>
                   </div>
@@ -434,7 +429,7 @@ export function StepByStep() {
                 </div>
               </div>
 
-              {/* Action Column */}
+              {/* Action Column with How To Pay line */}
               <div className="space-y-4">
                 <span className="inline-block rounded-lg border border-dashed border-lime/50 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.14em] text-lime min-h-[32px] flex items-center">
                   Code Sent Within 12h
@@ -442,6 +437,14 @@ export function StepByStep() {
                 <p className="text-sm leading-relaxed text-mist">
                   Chat directly with the developer. We answer questions, confirm your machine is ready, and send files directly.
                 </p>
+
+                {/* "How to pay" line */}
+                <div className="rounded-lg border border-hairline bg-deep/80 p-3.5 text-xs text-mist font-mono leading-relaxed">
+                  <p className="font-semibold text-ink mb-1">How to pay:</p>
+                  <p className="text-ink">India: <span className="text-mist">UPI or bank transfer.</span></p>
+                  <p className="text-ink">Outside India: <span className="text-mist">[FILL IN payment method].</span></p>
+                </div>
+
                 <a
                   href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
                   target="_blank"
@@ -459,7 +462,7 @@ export function StepByStep() {
   );
 }
 
-/* ── 05 · Free Library: AI Backtesting ───────────────────── */
+/* ── 05 · Free AI Guide: AI Backtesting ──────────────────── */
 export function FreeLibrary() {
   return (
     <section
@@ -470,7 +473,7 @@ export function FreeLibrary() {
         <Reveal>
           <Head
             n="05"
-            label="FREE RESOURCES"
+            label="FREE AI GUIDE"
             title={
               <>
                 Backtest any indicator with AI. <span className="text-cyan">Free forever.</span>
@@ -528,14 +531,51 @@ export function FreeLibrary() {
   );
 }
 
+/* ── Who Builds These Block ──────────────────────────────── */
+export function BuilderInfo() {
+  return (
+    <section className="border-t border-hairline py-20 bg-abyss">
+      <div className="mx-auto max-w-4xl px-6">
+        <Reveal>
+          <div className="card p-8 sm:p-10 border-hairline">
+            <p className="eyebrow !text-cyan mb-2">BUILDER & MAINTAINER</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+              Who builds these
+            </h2>
+            <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <div className="h-20 w-20 shrink-0 rounded-2xl border border-dashed border-hairline-strong bg-deep grid place-items-center text-xs font-mono text-dim text-center p-2">
+                [FILL IN photo]
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-ink">[FILL IN name]</h3>
+                <p className="text-sm text-mist leading-relaxed">
+                  [FILL IN one-line bio]
+                </p>
+                <div className="flex flex-wrap items-center gap-4 pt-2 text-xs font-mono">
+                  <span className="text-mist">LinkedIn: <span className="text-cyan">[FILL IN LinkedIn]</span></span>
+                  <span className="text-dim">•</span>
+                  <span className="text-mist">Email: <span className="text-cyan">[FILL IN email]</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 /* ── Final Inquiry Section ───────────────────────────────── */
+const FINAL_PHRASES = [
+  "Stock Breakout Screener",
+  "Falling Wedge Screener",
+  "Crypto Breakout Scanner",
+  "Insider Transactions Dashboard",
+  "Momentum & Valuation Screener",
+];
+
 export function Final() {
-  const text = useTyping([
-    "a breakout scanner for NIFTY 500",
-    "a crypto momentum tool for Hyperliquid",
-    "an insider transaction tracker",
-    "custom alert rules for my watchlist",
-  ]);
+  const text = useTyping(FINAL_PHRASES);
 
   return (
     <section id="custom" className="relative overflow-hidden border-t border-hairline py-32 text-center scroll-mt-20">
@@ -544,10 +584,13 @@ export function Final() {
         <p className="eyebrow">
           <b>YOUR TURN</b> · DIRECT SETUP
         </p>
-        <h2 className="mt-5 text-[clamp(2.2rem,5vw,4rem)] font-extrabold leading-[1.05] tracking-tight">
+        <h2
+          className="mt-5 text-[clamp(2.2rem,5vw,4rem)] font-extrabold leading-[1.05] tracking-tight"
+          aria-label="I want to run a screener on my own computer."
+        >
           I want to run
           <br />
-          <span className="text-lime">{text}</span>
+          <span className="text-lime">{text || "Stock Breakout Screener"}</span>
           <span className="cw-caret !h-[0.9em] !w-[4px] !bg-lime" />
         </h2>
         <p className="mx-auto mt-6 max-w-lg text-base text-mist leading-relaxed">
