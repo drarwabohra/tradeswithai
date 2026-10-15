@@ -25,7 +25,7 @@ export default function RefundPage() {
       <PageHero
         eyebrow="LEGAL · REFUNDS"
         title="Cancellation & Refund Policy"
-        sub="Last updated: [FILL IN date]"
+        sub="Last updated: 15 October 2026"
       />
 
       <div className="mx-auto max-w-4xl px-6 py-14 space-y-10">
@@ -59,7 +59,7 @@ export default function RefundPage() {
         <section className="card p-8 space-y-4">
           <h2 className="text-xl font-bold text-ink">Setup Guarantee</h2>
           <p className="text-sm leading-relaxed text-mist">
-            Setup guarantee: [FILL IN]
+            If we can't get your screener running on your PC within 7 days of purchase, you get a full refund.
           </p>
         </section>
 
@@ -80,12 +80,12 @@ export default function RefundPage() {
             For refund or cancellation requests, reach out directly:
           </p>
           <ul className="text-sm text-mist space-y-1.5 font-mono">
-            <li>Business / Owner: <span className="text-ink">[FILL IN business/owner name]</span></li>
-            <li>Email: <span className="text-ink">[FILL IN email]</span></li>
+            <li>Business / Owner: <span className="text-ink">Kausar Bohra</span></li>
+            <li>Email: <span className="text-ink">hkausar2910@gmail.com</span></li>
             <li>
               WhatsApp:{" "}
               <a
-                href={`https://wa.me/${SITE.whatsappNumber}`}
+                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about TradesWithAI screeners.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan underline min-h-[44px] inline-flex items-center"

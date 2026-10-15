@@ -24,7 +24,7 @@ export default function TermsPage() {
       <PageHero
         eyebrow="LEGAL · POLICIES"
         title="Terms of Service"
-        sub="Last updated: [FILL IN date]"
+        sub="Last updated: 15 October 2026"
       />
 
       <div className="mx-auto max-w-4xl px-6 py-14 space-y-10">
@@ -61,12 +61,12 @@ export default function TermsPage() {
             If you have questions about these terms, reach out directly:
           </p>
           <ul className="text-sm text-mist space-y-1.5 font-mono">
-            <li>Business / Owner: <span className="text-ink">[FILL IN business/owner name]</span></li>
-            <li>Email: <span className="text-ink">[FILL IN email]</span></li>
+            <li>Business / Owner: <span className="text-ink">Kausar Bohra</span></li>
+            <li>Email: <span className="text-ink">hkausar2910@gmail.com</span></li>
             <li>
               WhatsApp:{" "}
               <a
-                href={`https://wa.me/${SITE.whatsappNumber}`}
+                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about TradesWithAI screeners.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan underline min-h-[44px] inline-flex items-center"

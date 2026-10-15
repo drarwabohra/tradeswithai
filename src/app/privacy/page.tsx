@@ -24,7 +24,7 @@ export default function PrivacyPage() {
       <PageHero
         eyebrow="LEGAL · DATA PRIVACY"
         title="Privacy Policy"
-        sub="Last updated: [FILL IN date]"
+        sub="Last updated: 15 October 2026"
       />
 
       <div className="mx-auto max-w-4xl px-6 py-14 space-y-10">
@@ -48,15 +48,15 @@ export default function PrivacyPage() {
         <section className="card p-8 space-y-4">
           <h2 className="text-xl font-bold text-ink">Payment Data Security</h2>
           <p className="text-sm leading-relaxed text-mist">
-            We do not collect or store credit card numbers, CVVs, or banking passwords. Payments are conducted directly
-            through your official banking or UPI applications.
+            We do not collect or store credit card numbers, CVVs, or banking passwords. Payment details are agreed with you
+            directly on WhatsApp or email after you enquire.
           </p>
         </section>
 
         <section className="card p-8 space-y-4">
           <h2 className="text-xl font-bold text-ink">Cookies & Analytics</h2>
           <p className="text-sm leading-relaxed text-mist">
-            Cookies and analytics: [FILL IN]
+            This site doesn't use tracking cookies or analytics.
           </p>
         </section>
 
@@ -66,12 +66,12 @@ export default function PrivacyPage() {
             For questions regarding this privacy policy or your personal data, reach out to:
           </p>
           <ul className="text-sm text-mist space-y-1.5 font-mono">
-            <li>Business / Owner: <span className="text-ink">[FILL IN business/owner name]</span></li>
-            <li>Email: <span className="text-ink">[FILL IN email]</span></li>
+            <li>Business / Owner: <span className="text-ink">Kausar Bohra</span></li>
+            <li>Email: <span className="text-ink">hkausar2910@gmail.com</span></li>
             <li>
               WhatsApp:{" "}
               <a
-                href={`https://wa.me/${SITE.whatsappNumber}`}
+                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about TradesWithAI screeners.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan underline min-h-[44px] inline-flex items-center"

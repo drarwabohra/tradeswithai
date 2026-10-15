@@ -56,7 +56,7 @@
     "faqs": [
       {
         "question": "Is it a live feed?",
-        "answer": "Refresh frequency and data delay depend on the market data source you configure."
+        "answer": "It uses Yahoo Finance data. Results refresh each time you run a scan."
       }
     ]
   },
@@ -113,7 +113,7 @@
     "faqs": [
       {
         "question": "Does it track live filings?",
-        "answer": "It reads official disclosure filings ([FILL IN sources]) after they are published. It is not real-time."
+        "answer": "It reads official disclosure filings from NSE and BSE for Indian markets and the SEC for US markets, as soon as they are published."
       },
       {
         "question": "Can I export the data?",
@@ -126,7 +126,7 @@
     "name": "Momentum & Valuation Screener",
     "price": 5000,
     "currency": "INR",
-    "shortDescription": "Filter NIFTY 500 and S&P 500 stocks by P/E, trading volume, and RSI. Review the resulting watchlist using delayed market data.",
+    "shortDescription": "Filter NIFTY 500 and S&P 500 stocks by P/E, trading volume, and RSI. Review the resulting watchlist.",
     "thumbnail": "/products/momentum-value-screener/thumbnail.png",
     "gallery": [
       "/products/momentum-value-screener/1.png",
@@ -145,7 +145,7 @@
     "faqs": [
       {
         "question": "Does it use real-time data?",
-        "answer": "It uses delayed data via Yahoo Finance to find end-of-day or intraday volume spikes."
+        "answer": "It uses Yahoo Finance data to find end-of-day or intraday volume spikes."
       },
       {
         "question": "Can I change the filters?",

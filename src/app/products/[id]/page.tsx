@@ -23,16 +23,16 @@ const VIDEO_DURATIONS: Record<string, string> = {
 };
 
 function getProductSpecs(product: Product) {
-  let dataSource = "[FILL IN]";
+  let dataSource = "Yahoo Finance";
   if (product.id === "crypto-breakout-scanner") {
-    dataSource = "Hyperliquid public API ([FILL IN delay])";
+    dataSource = "Hyperliquid";
   } else if (product.id === "insider-trading-screener") {
-    dataSource = "Official disclosure filings ([FILL IN sources], not real-time)";
+    dataSource = "NSE & BSE (India), SEC (US)";
   } else if (product.id === "momentum-value-screener") {
-    dataSource = "Yahoo Finance (delayed market data)";
+    dataSource = "Yahoo Finance";
   }
 
-  let extraTools = "[FILL IN]";
+  let extraTools = "None";
   if (product.id === "breakout-screener" || product.id === "crypto-breakout-scanner") {
     extraTools = "Telegram Bot Token (optional)";
   } else if (product.id === "falling-wedge-screener") {
@@ -42,13 +42,12 @@ function getProductSpecs(product: Product) {
   }
 
   return [
-    { label: "Data source and delay", value: dataSource },
-    { label: "Tested on (OS)", value: "[FILL IN]" },
+    { label: "Data source", value: dataSource },
+    { label: "Tested on", value: "Windows" },
     { label: "Python version", value: "Python 3.10+" },
     { label: "Extra tools needed", value: extraTools },
     { label: "What you get", value: product.whatYouGet },
-    { label: "Updates", value: "[FILL IN]" },
-    { label: "Support", value: "Free setup help via WhatsApp ([FILL IN])" },
+    { label: "Updates", value: "Free bug fixes for 6 months" },
     { label: "Licence", value: "Personal single-user license (run and modify locally; no redistribution)" },
   ];
 }
@@ -148,7 +147,7 @@ export default async function ProductPage({ params }: Props) {
               <ol className="space-y-1.5 text-xs text-mist list-decimal list-inside leading-relaxed">
                 <li>Message on WhatsApp</li>
                 <li>We check your PC setup</li>
-                <li>Pay ([FILL IN payment methods])</li>
+                <li>Agree payment details on WhatsApp or email</li>
                 <li>Code + setup guide within 12 hours</li>
                 <li>Free setup help</li>
               </ol>
@@ -179,7 +178,6 @@ export default async function ProductPage({ params }: Props) {
                 aria-label={`${product.name} demonstration`}
                 className="h-full w-full object-contain"
               >
-                <track kind="captions" src="" label="English" />
                 <a href={product.video}>Download the demo video</a>
               </video>
             </div>
@@ -206,7 +204,7 @@ export default async function ProductPage({ params }: Props) {
             <p className="mt-4 leading-7 text-mist">{product.setupRequirements}</p>
             <p className="mt-4 text-sm leading-6 text-dim">
               This is software you install and run yourself. It does not place automated trades. Review our{" "}
-              <Link href="/refund-policy" className="text-cyan underline underline-offset-4">
+              <Link href="/refund-policy" className="-my-3 inline-block py-3 text-cyan underline underline-offset-4">
                 refund policy
               </Link>{" "}
               and ask us about setup if anything is unclear.
@@ -302,7 +300,7 @@ export default async function ProductPage({ params }: Props) {
             <ol className="space-y-2 text-xs text-mist list-decimal list-inside leading-relaxed">
               <li>Message on WhatsApp</li>
               <li>We check your PC setup</li>
-              <li>Pay ([FILL IN payment methods])</li>
+              <li>Agree payment details on WhatsApp or email</li>
               <li>Code + setup guide within 12 hours</li>
               <li>Free setup help</li>
             </ol>

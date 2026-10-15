@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -12,8 +12,18 @@ export function GalleryLightbox({
   productName: string;
 }) {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const opener = useRef<HTMLButtonElement | null>(null);
+  const closeBtn = useRef<HTMLButtonElement>(null);
 
-  const close = useCallback(() => setActiveIdx(null), []);
+  const close = useCallback(() => {
+    setActiveIdx(null);
+    // Return keyboard focus to the thumbnail that opened the lightbox.
+    setTimeout(() => opener.current?.focus(), 0);
+  }, []);
+  const isOpen = activeIdx !== null;
+  useEffect(() => {
+    if (isOpen) closeBtn.current?.focus();
+  }, [isOpen]);
 
   const prev = useCallback(() => {
     setActiveIdx((curr) => {
@@ -62,7 +72,10 @@ export function GalleryLightbox({
           <button
             key={src}
             type="button"
-            onClick={() => setActiveIdx(index)}
+            onClick={(e) => {
+              opener.current = e.currentTarget;
+              setActiveIdx(index);
+            }}
             className="group relative block aspect-[4/3] w-full overflow-hidden rounded-xl border border-hairline bg-surface min-h-[44px] text-left cursor-pointer transition hover:border-cyan/50 focus-visible:outline-2 focus-visible:outline-lime"
             aria-label={`Open ${productName} screenshot ${index + 1} in gallery lightbox`}
           >
@@ -74,7 +87,7 @@ export function GalleryLightbox({
               priority={index === 0}
               className="object-contain p-2 transition-transform duration-300 group-hover:scale-[1.03]"
             />
-            <span className="absolute bottom-2.5 right-2.5 rounded bg-surface/90 border border-hairline px-2 py-0.5 font-mono text-[11px] text-mist opacity-80 group-hover:opacity-100">
+            <span className="absolute bottom-2.5 right-2.5 rounded bg-surface/90 border border-hairline px-2 py-0.5 font-mono text-xs text-mist opacity-80 group-hover:opacity-100">
               {index + 1} / {images.length}
             </span>
           </button>
@@ -99,6 +112,7 @@ export function GalleryLightbox({
                 {productName} · Screenshot {activeIdx + 1} of {images.length}
               </span>
               <button
+                ref={closeBtn}
                 type="button"
                 onClick={close}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-hairline bg-surface text-mist hover:text-ink hover:border-cyan min-h-[44px] transition"
@@ -143,7 +157,7 @@ export function GalleryLightbox({
             </div>
 
             {/* Keyboard hint footer */}
-            <div className="text-center font-mono text-[11px] text-dim">
+            <div className="text-center font-mono text-xs text-dim">
               Use <kbd className="px-1.5 py-0.5 rounded border border-hairline bg-surface">←</kbd> and <kbd className="px-1.5 py-0.5 rounded border border-hairline bg-surface">→</kbd> to navigate · <kbd className="px-1.5 py-0.5 rounded border border-hairline bg-surface">Esc</kbd> to exit
             </div>
           </div>

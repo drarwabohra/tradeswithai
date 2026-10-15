@@ -6,12 +6,13 @@ export function CopyButton({ value, label }: { value: string; label: string }) {
     try {
       await navigator.clipboard.writeText(value);
       setMessage(`${label} copied.`);
+      setTimeout(() => setMessage(""), 2500);
     } catch {
       setMessage(`Could not copy. Select the ${label.toLowerCase()} and copy it manually.`);
     }
   }
   return <span className="inline-flex flex-wrap items-center gap-2">
-    <button className="button-secondary" type="button" aria-label={`Copy ${label}`} onClick={copy}>Copy</button>
-    <span role="status" aria-live="polite" className="text-sm text-muted">{message}</span>
+    <button className="button-secondary" type="button" aria-label={`Copy ${label}`} onClick={copy}>{message.endsWith("copied.") ? "Copied ✓" : "Copy"}</button>
+    <span role="status" aria-live="polite" className="text-sm text-mist">{message}</span>
   </span>;
 }

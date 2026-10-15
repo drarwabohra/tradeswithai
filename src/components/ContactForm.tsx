@@ -32,6 +32,8 @@ export default function ContactForm() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      const first = newErrors.name ? "name" : "message";
+      (e.currentTarget as HTMLFormElement).querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
     }
 

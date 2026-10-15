@@ -54,7 +54,7 @@ export function Pin({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const static_ = window.matchMedia("(max-width: 860px), (prefers-reduced-motion: reduce)");
+    const static_ = window.matchMedia("(max-width: 1024px), (prefers-reduced-motion: reduce)");
     return subscribe(() => {
       if (static_.matches) {
         el.style.setProperty("--k", "1");
@@ -242,3 +242,30 @@ export function useTyping(phrases: string[], active = true) {
 
   return text;
 }
+
+/**
+ * Scroll progress for a section that is NOT pinned.
+ * `measure` maps the element's rect + viewport height to 0..1. Returns 1 under reduced motion.
+ */
+export function useScrollProgress<T extends HTMLElement>(measure: (r: DOMRect, vh: number) => number) {
+  const ref = useRef<T>(null);
+  const [p, setP] = useState(0);
+  const fn = useRef(measure);
+  fn.current = measure;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setP(1);
+      return;
+    }
+    return subscribe(() => {
+      const v = Math.min(1, Math.max(0, fn.current(el.getBoundingClientRect(), window.innerHeight)));
+      setP((prev) => (Math.abs(prev - v) > 0.003 ? v : prev));
+    });
+  }, []);
+  return [ref, p] as const;
+}
+
+/** Window into a 0..1 progress value: 0 before `a`, 1 after `b`. */
+export const span = (k: number, a: number, b: number) => Math.min(1, Math.max(0, (k - a) / (b - a)));

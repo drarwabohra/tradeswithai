@@ -24,9 +24,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProductsPage() {
-  const cryptoCount = catalog.filter((p) => p.id === "crypto-breakout-scanner").length;
+// Products that scan crypto markets; everything else is a stock screener.
+const CRYPTO_IDS = ["crypto-breakout-scanner"];
 
+export default function ProductsPage() {
   return (
     <div>
       <PageHero
@@ -50,9 +51,7 @@ export default function ProductsPage() {
 
       <div className="mx-auto max-w-6xl px-6 py-14">
         {catalog.length ? (
-          <ProductCollection
-            counts={{ all: catalog.length, stocks: catalog.length - cryptoCount, crypto: cryptoCount }}
-          >
+          <ProductCollection markets={catalog.map((p) => (CRYPTO_IDS.includes(p.id) ? "crypto" : "stocks"))}>
             {catalog.map((p, i) => (
               <ProductCard key={p.id} product={p} priority={i < 2} />
             ))}

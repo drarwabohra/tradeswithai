@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Pin, useTyping } from "@/components/motion";
+import { useEffect, useRef, useState } from "react";
+import { Pin, span, useTyping } from "@/components/motion";
+import ParticleField from "./ParticleField";
 import { SITE } from "@/lib/site";
 
 const PHRASES = [
@@ -12,12 +14,14 @@ const PHRASES = [
   "Backtest indicator strategies using Claude AI prompts",
 ];
 
+const HEADLINE = ["Build", "your", "shortlist.", "Then", "read", "the", "chart."];
+
 const PATHS = [
-  { n: "01", t: "Why it works", href: "#proof", c: "#41c4e1" },
-  { n: "02", t: "Screeners", href: "#conveyor", c: "#a8e10d" },
-  { n: "03", t: "All 5 screeners", href: "#shelf", c: "#41c4e1" },
-  { n: "04", t: "How buying works", href: "#setup", c: "#f26419" },
-  { n: "05", t: "Free AI guide", href: "#resources", c: "#a8e10d" },
+  { n: "01", t: "Why it works", s: "Stats & stack", href: "#proof", c: "#41c4e1" },
+  { n: "02", t: "Screeners", s: "Watch them roll off", href: "#conveyor", c: "#a8e10d" },
+  { n: "03", t: "All 5 screeners", s: "Prices & demos", href: "#shelf", c: "#41c4e1" },
+  { n: "04", t: "How buying works", s: "Direct on WhatsApp", href: "#setup", c: "#f26419" },
+  { n: "05", t: "Free AI guide", s: "Backtest prompt", href: "#resources", c: "#a8e10d" },
 ];
 
 function AppWindow({ text }: { text: string }) {
@@ -88,113 +92,241 @@ function AppWindow({ text }: { text: string }) {
   );
 }
 
+/* Short "stamp" words that land one after another before the headline. Each uses a different motion. */
+const STAMPS = [
+  { word: "Scan.", mode: "scatter", a: 0.2, colour: "text-cyan" },
+  { word: "Filter.", mode: "snap", a: 0.32, colour: "text-ink" },
+  { word: "Shortlist.", mode: "settle", a: 0.44, colour: "text-lime" },
+] as const;
+const STAMP_LEN = 0.12; // each stamp's share of the scroll
+
+// Deterministic pseudo-random offsets so server and client render the same thing.
+const jitter = (i: number, salt: number) => {
+  const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
+  return x - Math.floor(x) - 0.5;
+};
+
+function Stamp({ word, mode, t, colour }: { word: string; mode: string; t: number; colour: string }) {
+  // t: 0 → 0.45 fly in, 0.45 → 0.75 hold, 0.75 → 1 leave
+  const inP = span(t, 0, 0.45);
+  const out = span(t, 0.75, 1);
+  if (t <= 0 || t >= 1) return null;
+  return (
+    <p
+      aria-hidden="true"
+      className={`pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 whitespace-nowrap text-[clamp(3.2rem,min(8vw,13vh),7.5rem)] font-extrabold leading-none tracking-[-0.035em] ${colour}`}
+      style={{ opacity: 1 - out, transform: `translateY(calc(-50% - ${(out * 40).toFixed(1)}px))`, filter: `blur(${(out * 8).toFixed(1)}px)` }}
+    >
+      {[...word].map((ch, i) => {
+        const e = 1 - Math.pow(1 - span(inP, i * 0.06, i * 0.06 + 0.55), 3);
+        let tr = "";
+        if (mode === "scatter") {
+          tr = `translate(${((1 - e) * jitter(i, 1) * 260).toFixed(1)}px, ${((1 - e) * jitter(i, 2) * 220).toFixed(1)}px) rotate(${((1 - e) * jitter(i, 3) * 70).toFixed(1)}deg)`;
+        } else if (mode === "snap") {
+          tr = `translateX(${((1 - e) * (i % 2 ? 1 : -1) * 120).toFixed(1)}px)`;
+        } else {
+          tr = `translateY(${((1 - e) * 60).toFixed(1)}px)`;
+        }
+        return (
+          <span key={i} className="inline-block" style={{ opacity: e, transform: tr }}>
+            {ch}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
 export default function Hero() {
   const text = useTyping(PHRASES);
+  const copyRef = useRef<HTMLDivElement>(null);
+  const winRef = useRef<HTMLDivElement>(null);
+  // Where the window settles: measured so it always sits in the free space right of the copy.
+  const [fit, setFit] = useState({ dx: 0, s: 0.8 });
+
+  useEffect(() => {
+    const measure = () => {
+      const copy = copyRef.current;
+      const win = winRef.current;
+      if (!copy || !win || window.innerWidth <= 1024) return;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const copyRight = copy.getBoundingClientRect().right;
+      const gap = Math.max(32, vw * 0.03);
+      const availW = vw - copyRight - gap * 2;
+      const availH = vh - 140;
+      const s = Math.max(0.45, Math.min(0.85, availW / win.offsetWidth, availH / win.offsetHeight));
+      const centre = copyRight + gap + availW / 2;
+      setFit({ dx: centre - vw / 2, s });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (copyRef.current) ro.observe(copyRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
 
   return (
-    <Pin vh={220} className="border-b border-hairline" stageClassName="grid">
+    <Pin vh={520} className="border-b border-hairline" stageClassName="grid">
       {(k) => {
-        const w = Math.min(1, k / 0.5);
+        /* Scroll script (k = 0 → 1):
+           0.00–0.20  window glides from centre stage to the right
+           0.20–0.56  three stamp words land and leave: Scan. → Filter. → Shortlist.
+           0.56–0.84  headline, sub-copy, buttons and section pills settle in
+           0.86–1.00  an orange glow dives out of the window and carries you to the next chapter */
+        const ease = 1 - Math.pow(1 - span(k, 0, 0.2), 3);
+        const start = 1.04;
+        const dive = span(k, 0.86, 1);
         const winStyle = {
-          transform: `translate(calc(${w} * 22vw), calc(${w} * 2vh)) scale(${1.08 - w * 0.28})`,
-          opacity: 1 - Math.max(0, (k - 0.85) / 0.15) * 0.35,
+          transform: `translate(${(ease * fit.dx).toFixed(1)}px, 2vh) scale(${(start + (fit.s - start) * ease + dive * 0.12).toFixed(4)})`,
+          opacity: 1 - dive * 0.85,
         };
-
-        // Text subtle fade that starts fully visible at 1.0 on first load
-        const textOpacity = Math.max(0.2, 1 - Math.max(0, (k - 0.6) / 0.4) * 0.7);
-
-        // Chips visible threshold
-        const chipsVisible = k >= 0.15;
+        const head = span(k, 0.56, 0.66);
+        const ctaT = span(k, 0.64, 0.72);
+        const ctaOn = ctaT > 0.6 && dive < 0.5;
+        const chipsOn = k > 0.78 && dive < 0.5;
+        const copyFade = 1 - span(dive, 0, 0.6);
+        const glowO = dive < 0.5 ? dive * 1.7 : (1 - dive) * 1.7;
 
         return (
           <>
             <div className="hero-env pointer-events-none" />
+            <div className="absolute inset-0" style={{ opacity: 0.5 + 0.5 * span(k, 0, 0.25) }}>
+              <ParticleField boost={dive} />
+            </div>
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_56%_45%,transparent_30%,rgb(5_18_25/0.75)_100%)]" />
 
-            {/* App Window */}
-            <div className="absolute inset-0 grid place-items-center max-[1024px]:static max-[1024px]:order-2 max-[1024px]:pb-16 max-[1024px]:px-6">
-              <div className="will-change-transform max-[1024px]:!transform-none" style={winStyle}>
+            {/* App window */}
+            <div className="absolute inset-0 grid place-items-center max-[1024px]:static max-[1024px]:order-2 max-[1024px]:px-6 max-[1024px]:pb-16">
+              <div ref={winRef} className="will-change-transform max-[1024px]:!transform-none max-[1024px]:!opacity-100" style={winStyle}>
                 <AppWindow text={text} />
               </div>
             </div>
 
-            {/* Copy Content - visible on first load at every screen width */}
+            {/* Dive glow: blooms from the window and fades into the next chapter */}
             <div
-              className="relative z-10 flex h-full flex-col justify-center px-[clamp(1.5rem,6vw,7rem)] pt-16 max-[1024px]:order-1 max-[1024px]:pt-28"
-              style={{ textShadow: "var(--tshadow)" }}
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-20 aspect-square w-[22rem] rounded-full max-[1024px]:hidden"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(255,214,186,.95), rgba(242,100,25,.7) 32%, rgba(242,100,25,.18) 64%, transparent)",
+                transform: `translate(calc(-50% + ${(fit.dx * (1 - dive * 0.6)).toFixed(1)}px), -50%) scale(${(0.2 + dive * 7).toFixed(3)})`,
+                opacity: glowO,
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-20 bg-abyss max-[1024px]:hidden"
+              style={{ opacity: span(dive, 0.55, 1) }}
+            />
+
+            {/* Copy */}
+            <div
+              className="relative z-10 flex h-full flex-col justify-center px-[clamp(1.5rem,6vw,7rem)] pb-6 pt-20 max-[1024px]:order-1 max-[1024px]:pt-28"
+              style={{ textShadow: "var(--tshadow)", opacity: copyFade }}
             >
-              <p className="eyebrow flex items-center gap-2.5 !text-cyan" style={{ opacity: textOpacity }}>
-                <span className="live-dot" /> {SITE.name} · Stock & crypto screeners you run yourself
-              </p>
-
-              <h1
-                className="mt-4 max-w-[13ch] text-[clamp(2.4rem,5vw,4.5rem)] font-extrabold leading-[1.02] tracking-[-0.025em] text-ink"
-                style={{ opacity: textOpacity }}
-              >
-                Build your <span className="text-cyan">shortlist.</span> Then read the <span className="text-lime">chart.</span>
-              </h1>
-
-              <div style={{ opacity: textOpacity }}>
-                <p className="mt-5 max-w-[46ch] text-[clamp(1rem,1.2vw,1.15rem)] leading-relaxed text-mist">
-                  Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python
-                  source code and setup guide included. Flat ₹5,000 one-time payment.
-                </p>
-
-                {/* Buttons: WhatsApp is primary (filled lime), Compare screeners is secondary */}
-                <div className="mt-7 flex flex-wrap gap-3.5">
-                  <a
-                    href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary min-h-[44px]"
-                    style={{ textShadow: "none" }}
-                  >
-                    Inquire on WhatsApp
-                  </a>
-                  <a href="#conveyor" className="btn-ghost min-h-[44px]" style={{ textShadow: "none" }}>
-                    Compare screeners →
-                  </a>
-                  <Link href="/resources" className="btn-ghost min-h-[44px]" style={{ textShadow: "none" }}>
-                    Free AI resources
-                  </Link>
+              <div ref={copyRef} className="relative w-full max-w-[min(38rem,44vw)] max-[1024px]:max-w-[40rem]">
+                {/* Stamp words (desktop only) */}
+                <div className="max-[1024px]:hidden">
+                  {STAMPS.map((s) => (
+                    <Stamp key={s.word} word={s.word} mode={s.mode} colour={s.colour} t={span(k, s.a, s.a + STAMP_LEN)} />
+                  ))}
                 </div>
-              </div>
 
-              {/* Hero chips: renamed and not focusable while invisible */}
-              <div className="mt-10 flex flex-wrap gap-2.5 max-w-[36rem]">
-                {PATHS.map((p, i) => {
-                  const cardVisible = chipsVisible;
-                  return (
-                    <a
-                      key={p.n}
-                      href={p.href}
-                      tabIndex={cardVisible ? 0 : -1}
-                      aria-hidden={!cardVisible}
-                      className={`card card-hover flex items-center gap-2 px-3.5 py-2 transition-all min-h-[44px] max-[1024px]:!opacity-100 max-[1024px]:!pointer-events-auto ${
-                        cardVisible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                      }`}
-                      style={{
-                        ["--hc" as string]: p.c,
-                        textShadow: "none",
-                      }}
-                    >
-                      <span className="font-mono text-xs font-bold" style={{ color: p.c }}>
-                        {p.n}
+                <div style={{ opacity: head }} className="max-[1024px]:!opacity-100">
+                  <p className="eyebrow flex items-center gap-2.5 !text-cyan">
+                    <span className="live-dot" /> {SITE.name} · Stock & crypto screeners you run yourself
+                  </p>
+                  <h1 className="mt-4 max-w-[13ch] text-[clamp(2.2rem,min(4.6vw,7.6vh),4.4rem)] font-extrabold leading-[1.02] tracking-[-0.025em] text-ink max-[1024px]:text-[clamp(2.2rem,7vw,3.6rem)]">
+                    {HEADLINE.map((wd, i) => (
+                      <span
+                        key={i}
+                        className={`hero-word ${wd === "shortlist." ? "em" : wd === "chart." ? "!text-lime" : ""}`}
+                        style={{ ["--th" as string]: 0.56 + i * 0.012 }}
+                      >
+                        {wd}{" "}
                       </span>
-                      <span className="text-xs font-bold text-ink">{p.t}</span>
+                    ))}
+                  </h1>
+                </div>
+
+                <div className="max-[1024px]:!opacity-100 max-[1024px]:!transform-none" style={{ opacity: ctaT, transform: `translateY(${((1 - ctaT) * 16).toFixed(1)}px)` }}>
+                  <p className="mt-[min(1.25rem,2vh)] max-w-[46ch] text-[clamp(0.95rem,1.15vw,1.1rem)] leading-relaxed text-mist">
+                    Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python
+                    source code and setup guide included. Flat ₹5,000 one-time payment.
+                  </p>
+                  <div className="mt-[min(1.75rem,3vh)] flex flex-wrap gap-3">
+                    <a
+                      href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      tabIndex={ctaOn ? 0 : -1}
+                      className="btn-primary min-h-[44px] max-[1024px]:!pointer-events-auto"
+                      style={{ textShadow: "none", pointerEvents: ctaOn ? "auto" : "none" }}
+                    >
+                      Inquire on WhatsApp
                     </a>
-                  );
-                })}
+                    <a
+                      href="#conveyor"
+                      tabIndex={ctaOn ? 0 : -1}
+                      className="btn-ghost min-h-[44px] max-[1024px]:!pointer-events-auto"
+                      style={{ textShadow: "none", pointerEvents: ctaOn ? "auto" : "none" }}
+                    >
+                      Compare screeners →
+                    </a>
+                    <Link
+                      href="/resources"
+                      tabIndex={ctaOn ? 0 : -1}
+                      className="btn-ghost min-h-[44px] max-[1024px]:!pointer-events-auto"
+                      style={{ textShadow: "none", pointerEvents: ctaOn ? "auto" : "none" }}
+                    >
+                      Free AI resources
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Quick links to sections 01–05: compact pills */}
+                <div className="mt-[min(2rem,3.5vh)] flex flex-wrap gap-2">
+                  {PATHS.map((p, i) => {
+                    const t = span(k, 0.72 + i * 0.02, 0.78 + i * 0.02);
+                    return (
+                      <a
+                        key={p.n}
+                        href={p.href}
+                        tabIndex={chipsOn ? 0 : -1}
+                        title={p.s}
+                        className="card card-hover flex min-h-[44px] items-center gap-2 !rounded-full px-3.5 py-2 max-[1024px]:!pointer-events-auto max-[1024px]:!opacity-100 max-[1024px]:!transform-none"
+                        style={{
+                          ["--hc" as string]: p.c,
+                          opacity: t,
+                          transform: `translateY(${((1 - t) * 18).toFixed(1)}px)`,
+                          textShadow: "none",
+                          pointerEvents: chipsOn ? "auto" : "none",
+                        }}
+                      >
+                        <span className="font-mono text-xs font-bold" style={{ color: p.c }}>
+                          {p.n}
+                        </span>
+                        <span className="text-sm font-bold text-ink">{p.t}</span>
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
-            {/* Scroll indicator cue */}
-            <p
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs tracking-[0.25em] text-dim max-[860px]:hidden"
-              style={{ opacity: k > 0.05 ? 0 : 1, transition: "opacity .4s" }}
+            {/* Scroll cue: visible until the reveal starts */}
+            <div
+              className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 font-mono text-xs tracking-[0.25em] text-mist max-[1024px]:hidden"
+              style={{ opacity: k > 0.04 ? 0 : 1, transition: "opacity .4s" }}
+              aria-hidden="true"
             >
-              SCROLL TO EXPLORE ↓
-            </p>
+              SCROLL TO EXPLORE
+              <span className="scroll-cue-line" />
+            </div>
           </>
         );
       }}

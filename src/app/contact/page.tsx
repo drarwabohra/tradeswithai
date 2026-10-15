@@ -107,7 +107,7 @@ export default function ContactPage() {
 
             <div className="rounded-lg border border-hairline bg-abyss/60 p-4 text-xs text-dim leading-relaxed font-mono">
               <p className="text-mist font-semibold mb-1">Target Response Time</p>
-              Usually under 1 hour, [FILL IN hours] IST
+              Usually under 1 hour, 9am–11pm IST
             </div>
           </aside>
         </div>
