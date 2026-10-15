@@ -23,7 +23,7 @@ export function BuyBar({ price, name }: { price: number; name: string }) {
     };
   }, []);
 
-  const message = `Hi, I want to acquire ${name}.`;
+  const message = `Hi, I want to buy the ${name}. My OS is: `;
 
   return (
     <div

@@ -11,7 +11,7 @@ import {
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
-  title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
+  title: { absolute: "TradesWithAI · Algorithmic Stock & Crypto Screeners" },
   description:
     "Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python source code included. One-time payment.",
   openGraph: {

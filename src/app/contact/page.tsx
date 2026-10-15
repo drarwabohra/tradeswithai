@@ -5,7 +5,7 @@ import { SITE } from "@/lib/site";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact & Setup Verification · TradesWithAI",
+  title: "Contact & Setup Verification",
   description: "Have questions about a screener, Python dependencies, or custom scanning logic? Get in touch directly.",
   alternates: { canonical: "/contact" },
   openGraph: {
@@ -56,7 +56,7 @@ export default function ContactPage() {
                 </div>
                 <h2 className="mt-4 text-xl font-bold text-ink">Chat with us on WhatsApp</h2>
                 <p className="mt-2 text-sm leading-relaxed text-mist">
-                  Ask about features, setup requirements, operating systems, or get immediate file dispatch.
+                  Ask about features, setup requirements, operating systems, or code delivery.
                 </p>
               </div>
               <span className="btn-primary mt-6 min-h-[44px] justify-between">
@@ -89,7 +89,7 @@ export default function ContactPage() {
             <ul className="space-y-3.5 text-sm text-mist border-t border-hairline pt-5">
               <li className="flex items-start gap-2.5">
                 <Check size={16} className="text-lime shrink-0 mt-0.5" aria-hidden="true" />
-                <span>The specific screener you are interested in (Breakout, Wedge, Crypto, etc.)</span>
+                <span>The specific screener (Stock Breakout Screener, Falling Wedge Screener, etc.)</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <Check size={16} className="text-lime shrink-0 mt-0.5" aria-hidden="true" />
@@ -107,7 +107,7 @@ export default function ContactPage() {
 
             <div className="rounded-lg border border-hairline bg-abyss/60 p-4 text-xs text-dim leading-relaxed font-mono">
               <p className="text-mist font-semibold mb-1">Target Response Time</p>
-              Under 1 hour during active market hours. Maximum 12 hours for manual code dispatch.
+              Code sent within 12 hours of payment confirmation (usually under 1 hour).
             </div>
           </aside>
         </div>

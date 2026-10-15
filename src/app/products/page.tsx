@@ -6,7 +6,7 @@ import { Code2, Check } from "lucide-react";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Compare Screeners · TradesWithAI",
+  title: "Compare Screeners",
   description:
     "Explore our full catalog of Python stock and crypto screeners. Inspect features, demos, and acquire full source code with a flat one-time payment.",
   alternates: { canonical: "/products" },

@@ -39,7 +39,7 @@ export function Proof() {
     { v: 5, d: 0, s: "", prefix: "", l: "Screeners Shipped" },
     { v: 100, d: 0, s: "%", prefix: "", l: "Source Code Ownership" },
     { v: 5000, d: 0, s: "", prefix: "₹", l: "Flat One-Time Price" },
-    { v: 12, d: 0, s: "h", prefix: "", l: "Max Target Delivery" },
+    { v: 12, d: 0, s: "h", prefix: "", l: "Sent within 12h (usually <1h)" },
   ];
 
   return (
@@ -61,14 +61,14 @@ export function Proof() {
           />
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline md:grid-cols-4">
+        <div className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-hairline bg-hairline md:grid-cols-4 min-h-[148px]">
           {stats.map((s, i) => (
-            <Reveal key={s.l} delay={i * 90} className="bg-deep p-7">
-              <p className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold tracking-tight text-ink font-mono flex items-baseline">
+            <Reveal key={s.l} delay={i * 90} className="bg-deep p-7 min-h-[148px] flex flex-col justify-center">
+              <p className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold tracking-tight text-ink font-mono flex items-baseline min-h-[1.2em]">
                 {s.prefix && <span className="mr-0.5">{s.prefix}</span>}
                 <CountUp to={s.v} decimals={s.d} suffix={s.s} />
               </p>
-              <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-dim">{s.l}</p>
+              <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-dim">{s.l}</p>
             </Reveal>
           ))}
         </div>
@@ -141,7 +141,7 @@ export function ProductLine() {
               [
                 "Pick your screener",
                 "Inquire directly via WhatsApp",
-                "Instant code delivery & setup guide",
+                "Code sent within 12 hours (usually under 1 hour)",
                 "Free guidance if you get stuck",
               ],
             ],
@@ -194,7 +194,7 @@ export function ProductLine() {
                       style={{ ["--hc" as string]: "#41c4e1" }}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-[0.62rem] tracking-[0.16em] text-cyan font-semibold">
+                        <span className="font-mono text-xs tracking-[0.16em] text-cyan font-semibold">
                           PYTHON SOURCE CODE
                         </span>
                         <span
@@ -290,7 +290,7 @@ export function TheFullShelf() {
               <div className="mt-5 flex-1 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="chip !py-0.5 !text-[0.6rem] text-lime border-lime/30 min-h-[28px]">
+                    <span className="chip !py-0.5 !text-xs text-lime border-lime/30 min-h-[28px]">
                       PYTHON 3.10+
                     </span>
                     <span className="font-mono text-base font-bold text-lime">{formatINR(product.price)}</span>
@@ -348,7 +348,7 @@ export function StepByStep() {
                 <span className="text-tangerine">direct on WhatsApp.</span>
               </>
             }
-            sub="No confusing payment gateways or opaque subscriptions. Direct human setup and instant file delivery."
+            sub="No confusing payment gateways or opaque subscriptions. Direct human setup. Code sent within 12 hours of payment confirmation (usually under 1 hour)."
           />
         </Reveal>
       </div>
@@ -362,9 +362,9 @@ export function StepByStep() {
           const done = cur >= SETUP_STAGES.length;
 
           return (
-            <div className="mx-auto grid h-full max-w-6xl items-center gap-10 px-6 py-20 md:grid-cols-[16rem_1fr_15rem]">
+            <div className="mx-auto grid h-full max-w-6xl items-center gap-10 px-6 py-20 md:grid-cols-[16rem_1fr_15rem] min-h-[520px]">
               <div>
-                <p className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-lime font-bold">
+                <p className="mb-3 font-mono text-xs uppercase tracking-[0.14em] text-lime font-bold">
                   Step {Math.min(cur + 1, SETUP_STAGES.length)} / {SETUP_STAGES.length}
                 </p>
                 <ol className="grid gap-3 font-mono text-xs text-dim">
@@ -381,23 +381,23 @@ export function StepByStep() {
                 </ol>
               </div>
 
-              {/* Progress Card */}
+              {/* Progress Card with fixed min-height to eliminate layout shift */}
               <div
-                className={`relative h-[25rem] overflow-hidden rounded-xl border border-hairline-strong bg-[#061e29] transition-shadow duration-500 ${
+                className={`relative h-[25rem] min-h-[25rem] overflow-hidden rounded-xl border border-hairline-strong bg-[#061e29] transition-shadow duration-500 ${
                   done ? "package-glow shadow-2xl" : ""
                 }`}
               >
                 <div className="flex items-center gap-2 border-b border-hairline px-4 py-2.5">
                   <span className="h-2 w-2 rounded-full bg-mist/40" />
                   <span className="h-2 w-2 rounded-full bg-mist/40" />
-                  <span className="ml-3 rounded bg-deep px-3 py-0.5 font-mono text-[0.62rem] text-dim">
+                  <span className="ml-3 rounded bg-deep px-3 py-0.5 font-mono text-xs text-dim">
                     tradeswithai · order dispatch
                   </span>
                 </div>
                 <div className="space-y-4 p-6">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-bold text-ink">Order & Setup Verification</p>
-                    <span className="chip !py-0.5 text-[0.6rem] text-lime border-lime/40 min-h-[28px]">
+                    <span className="chip !py-0.5 !text-xs text-lime border-lime/40 min-h-[28px]">
                       {done ? "READY FOR DOWNLOAD" : "PROCESSING"}
                     </span>
                   </div>
@@ -411,7 +411,7 @@ export function StepByStep() {
                     const fill = Math.max(0, Math.min(1, (k - 0.1 - i * 0.15) / 0.2));
                     return (
                       <div key={l as string}>
-                        <div className="flex justify-between font-mono text-[0.68rem] text-mist">
+                        <div className="flex justify-between font-mono text-xs text-mist">
                           <span>{l as string}</span>
                           <span>{Math.round((v as number) * 100 * fill)}%</span>
                         </div>
@@ -436,8 +436,8 @@ export function StepByStep() {
 
               {/* Action Column */}
               <div className="space-y-4">
-                <span className="inline-block rounded-lg border border-dashed border-lime/50 px-3 py-1.5 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-lime min-h-[32px] flex items-center">
-                  Manual Delivery
+                <span className="inline-block rounded-lg border border-dashed border-lime/50 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.14em] text-lime min-h-[32px] flex items-center">
+                  Code Sent Within 12h
                 </span>
                 <p className="text-sm leading-relaxed text-mist">
                   Chat directly with the developer. We answer questions, confirm your machine is ready, and send files directly.
@@ -514,8 +514,7 @@ export function FreeLibrary() {
                 <span className="font-mono text-xs text-dim">Full PDF Artifact</span>
                 <a
                   href="/resources/super-trend-strategy-report.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  download
                   className="btn-ghost min-h-[44px]"
                 >
                   Download Sample PDF ↓

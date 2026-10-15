@@ -4,7 +4,7 @@ import { ArrowUpRight, BookOpen, Code2 } from "lucide-react";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Free Resources · TradesWithAI",
+  title: "Free Resources",
   description: "Free trading strategy guides, AI prompts, and backtesting resources. Learn without paywalls.",
   alternates: { canonical: "/resources" },
   openGraph: {
@@ -62,8 +62,7 @@ export default function ResourcesPage() {
           {/* Guide 2: Sample Strategy Report PDF */}
           <a
             href="/resources/super-trend-strategy-report.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+            download
             className="card card-hover group flex flex-col justify-between overflow-hidden p-8 min-h-[44px]"
             style={{ ["--hc" as string]: "#a8e10d" }}
           >

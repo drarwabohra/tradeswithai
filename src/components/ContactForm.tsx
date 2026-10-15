@@ -66,11 +66,11 @@ export default function ContactForm() {
             onChange={(e) => setScreener(e.target.value)}
             className="field min-h-[44px]"
           >
-            <option value="Stock Breakout Screener">Stock Breakout</option>
-            <option value="Falling Wedge Screener">Falling Wedge</option>
-            <option value="Crypto Breakout Scanner">Crypto Breakout</option>
-            <option value="Insider Transactions Dashboard">Insider Dashboard</option>
-            <option value="Momentum & Valuation Screener">Momentum & Valuation</option>
+            <option value="Stock Breakout Screener">Stock Breakout Screener</option>
+            <option value="Falling Wedge Screener">Falling Wedge Screener</option>
+            <option value="Crypto Breakout Scanner">Crypto Breakout Scanner</option>
+            <option value="Insider Transactions Dashboard">Insider Transactions Dashboard</option>
+            <option value="Momentum & Valuation Screener">Momentum & Valuation Screener</option>
             <option value="General Question">General Question</option>
           </select>
         </div>

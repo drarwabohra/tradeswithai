@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy · TradesWithAI",
+  title: "Privacy Policy",
   description: "How TradesWithAI handles and protects customer information.",
   alternates: { canonical: "/privacy" },
   openGraph: {

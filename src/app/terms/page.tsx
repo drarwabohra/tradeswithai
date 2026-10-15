@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Terms of Service · TradesWithAI",
+  title: "Terms of Service",
   description: "Terms and conditions for purchasing and using TradesWithAI software and screeners.",
   alternates: { canonical: "/terms" },
   openGraph: {

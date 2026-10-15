@@ -31,7 +31,7 @@ function AppWindow({ text }: { text: string }) {
           <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
           <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
         </div>
-        <span className="font-mono text-[0.65rem] text-dim">terminal · python 3.10+</span>
+        <span className="font-mono text-xs text-dim">terminal · python 3.10+</span>
       </div>
       <div className="grid min-h-[17.5rem] grid-cols-[11.5rem_1fr] max-sm:grid-cols-1">
         <aside className="border-r border-hairline p-4 text-xs max-sm:hidden">
@@ -43,9 +43,9 @@ function AppWindow({ text }: { text: string }) {
               {x}
             </p>
           ))}
-          <p className="mb-2 mt-4 px-2 font-mono text-[0.55rem] tracking-[0.16em] text-dim">MARKETS</p>
+          <p className="mb-2 mt-4 px-2 font-mono text-xs tracking-[0.16em] text-dim">MARKETS</p>
           {["NSE & NIFTY 500", "US Stocks (S&P 500)", "Hyperliquid Crypto"].map((x, i) => (
-            <p key={x} className="flex items-center gap-2 px-2 py-1 text-[0.72rem] text-mist">
+            <p key={x} className="flex items-center gap-2 px-2 py-1 text-xs text-mist">
               <span className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-lime" : i === 2 ? "bg-cyan" : "bg-mist/40"}`} />
               {x}
             </p>
@@ -66,18 +66,18 @@ function AppWindow({ text }: { text: string }) {
                 <span className="cw-caret" />
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-hairline pt-2.5">
-                <span className="chip !py-0.5 !text-[0.62rem] text-lime border-lime/30 min-h-[32px]">
+                <span className="chip !py-0.5 !text-xs text-lime border-lime/30 min-h-[32px]">
                   <span className="h-1.5 w-1.5 rounded-full bg-lime" /> Local Engine
                 </span>
-                <span className="chip !py-0.5 !text-[0.62rem] min-h-[32px]">Telegram Alerts</span>
-                <span className="chip !py-0.5 !text-[0.62rem] min-h-[32px]">Source Code</span>
-                <span className="ml-auto flex items-center gap-1 font-mono text-[0.65rem] text-cyan">
+                <span className="chip !py-0.5 !text-xs min-h-[32px]">Telegram Alerts</span>
+                <span className="chip !py-0.5 !text-xs min-h-[32px]">Source Code</span>
+                <span className="ml-auto flex items-center gap-1 font-mono text-xs text-cyan">
                   <span className="h-2 w-2 rounded-full bg-cyan shadow-[0_0_10px_rgb(65_196_225/0.8)]" /> READY
                 </span>
               </div>
             </div>
           </div>
-          <ul className="mt-4 flex flex-wrap gap-2 text-[0.65rem] text-dim">
+          <ul className="mt-4 flex flex-wrap gap-2 text-xs text-dim">
             {["Yahoo Finance & public feeds", "No brokerage connection needed", "Clean standalone scripts"].map((c) => (
               <li key={c} className="rounded-full border border-hairline px-2.5 py-1 text-mist">
                 ✓ {c}
@@ -183,11 +183,11 @@ export default function Hero() {
                       textShadow: "none",
                     }}
                   >
-                    <span className="font-mono text-[0.65rem] font-bold" style={{ color: p.c }}>
+                    <span className="font-mono text-xs font-bold" style={{ color: p.c }}>
                       {p.n}
                     </span>
                     <b className="block text-sm font-bold text-ink">{p.t}</b>
-                    <span className="font-mono text-[0.65rem] text-mist">{p.s}</span>
+                    <span className="font-mono text-xs text-mist">{p.s}</span>
                   </a>
                 ))}
               </div>
@@ -195,7 +195,7 @@ export default function Hero() {
 
             {/* Scroll indicator cue */}
             <p
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[0.68rem] tracking-[0.25em] text-dim max-[860px]:hidden"
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs tracking-[0.25em] text-dim max-[860px]:hidden"
               style={{ opacity: k > 0.05 ? 0 : 1, transition: "opacity .4s" }}
             >
               SCROLL TO EXPLORE ↓

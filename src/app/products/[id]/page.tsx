@@ -27,13 +27,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${product.name} · Source Code & Setup Guide`,
       description: product.shortDescription,
       url: canonicalUrl,
-      images: [{ url: `${SITE_URL}${product.thumbnail}`, alt: product.name }],
+      images: [
+        {
+          url: `${SITE_URL}/products/${product.id}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: product.name,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${product.name} · Source Code & Setup Guide`,
       description: product.shortDescription,
-      images: [`${SITE_URL}${product.thumbnail}`],
+      images: [`${SITE_URL}/products/${product.id}/opengraph-image`],
     },
   };
 }
@@ -79,7 +86,7 @@ export default async function ProductPage({ params }: Props) {
             <a
               className="btn-primary mt-4 w-full justify-center min-h-[44px]"
               href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(
-                "Hi, I want to acquire " + product.name + "."
+                "Hi, I want to buy the " + product.name + ". My OS is: "
               )}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -158,9 +165,8 @@ export default async function ProductPage({ params }: Props) {
           <section className="mt-12 border-t border-hairline pt-8">
             <h2 className="text-2xl font-bold text-ink">What you receive.</h2>
             <p className="mt-4 leading-7 text-mist">{product.whatYouGet}</p>
-            <p className="mt-4 text-sm leading-6 text-dim">
-              Message us on WhatsApp to confirm your setup and get payment details. We verify the payment manually, then
-              instantly send the full code and walkthrough to you.
+            <p className="mt-4 text-sm leading-6 text-mist">
+              Message us on WhatsApp to confirm your setup and get payment details. We verify the payment manually. Code sent within 12 hours of payment confirmation (usually under 1 hour).
             </p>
           </section>
 
@@ -184,7 +190,7 @@ export default async function ProductPage({ params }: Props) {
                   <Link href="/contact" className="text-cyan underline">
                     contact page
                   </Link>
-                  , and we will dispatch them immediately.
+                  , and we will verify your payment and send your files right away.
                 </p>
               </details>
             </div>
@@ -203,7 +209,7 @@ export default async function ProductPage({ params }: Props) {
           </p>
           <a
             href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(
-              "Hi, I want to acquire " + product.name + "."
+              "Hi, I want to buy the " + product.name + ". My OS is: "
             )}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -211,8 +217,8 @@ export default async function ProductPage({ params }: Props) {
           >
             Inquire on WhatsApp
           </a>
-          <p className="mt-4 text-xs leading-6 text-dim">
-            Direct WhatsApp verification. Target delivery within {SITE.deliveryHours}.
+          <p className="mt-4 text-xs leading-6 text-mist font-mono">
+            Code sent within 12 hours of payment confirmation (usually under 1 hour).
           </p>
           <Link
             href="/contact"

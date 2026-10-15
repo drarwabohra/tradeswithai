@@ -4,7 +4,7 @@ import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Cancellation & Refund Policy · TradesWithAI",
+  title: "Cancellation & Refund Policy",
   description: "Our refund policy regarding digital software downloads and source code delivery.",
   alternates: { canonical: "/refund-policy" },
   openGraph: {
@@ -51,7 +51,7 @@ export default function RefundPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-lime font-bold">✓</span>
-              <span>We fail to dispatch your files within the promised timeframe ({SITE.deliveryHours}).</span>
+              <span>We fail to deliver your files within the promised timeframe (within 12 hours of payment confirmation).</span>
             </li>
           </ul>
         </section>

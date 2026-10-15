@@ -8,7 +8,7 @@
   --color-raised: #0d3344;
   --color-ink: #e9f3f6;
   --color-mist: #9db7c2;
-  --color-dim: #64808c;
+  --color-dim: #82a5b5;
   --color-hairline: rgb(127 180 199 / 0.14);
   --color-hairline-strong: rgb(127 180 199 / 0.28);
   --color-cyan: #41c4e1;
@@ -49,10 +49,32 @@ body {
   background: rgb(65 196 225 / 0.35);
 }
 
+/* ───────────────────────── Focus states ───────────────────────── */
+:focus {
+  outline: none;
+}
+
+:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+.btn-primary:focus-visible,
+.btn-ghost:focus-visible,
+.button-primary:focus-visible,
+.button-secondary:focus-visible,
+.card-hover:focus-visible,
+.product-card-link:focus-visible {
+  outline: 2px solid var(--color-lime) !important;
+  outline-offset: 2px !important;
+}
+
 /* ───────────────────────── Shared UI ───────────────────────── */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -167,7 +189,7 @@ body {
   border-radius: 9999px;
   padding: 0.25rem 0.65rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--color-mist);
 }
 
@@ -199,6 +221,11 @@ body {
 .field:focus {
   outline: none;
   border-color: var(--color-cyan);
+}
+.field:focus-visible {
+  outline: 2px solid var(--color-lime) !important;
+  outline-offset: 2px !important;
+  border-color: var(--color-lime);
 }
 
 .prose-twa h2 {
