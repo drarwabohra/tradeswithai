@@ -24,7 +24,7 @@ export default function PrivacyPage() {
       <PageHero
         eyebrow="LEGAL · DATA PRIVACY"
         title="Privacy Policy"
-        sub={`Last updated: ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
+        sub="Last updated: [FILL IN date]"
       />
 
       <div className="mx-auto max-w-4xl px-6 py-14 space-y-10">
@@ -51,6 +51,35 @@ export default function PrivacyPage() {
             We do not collect or store credit card numbers, CVVs, or banking passwords. Payments are conducted directly
             through your official banking or UPI applications.
           </p>
+        </section>
+
+        <section className="card p-8 space-y-4">
+          <h2 className="text-xl font-bold text-ink">Cookies & Analytics</h2>
+          <p className="text-sm leading-relaxed text-mist">
+            Cookies and analytics: [FILL IN]
+          </p>
+        </section>
+
+        <section className="card p-8 space-y-4">
+          <h2 className="text-xl font-bold text-ink">Contact</h2>
+          <p className="text-sm leading-relaxed text-mist">
+            For questions regarding this privacy policy or your personal data, reach out to:
+          </p>
+          <ul className="text-sm text-mist space-y-1.5 font-mono">
+            <li>Business / Owner: <span className="text-ink">[FILL IN business/owner name]</span></li>
+            <li>Email: <span className="text-ink">[FILL IN email]</span></li>
+            <li>
+              WhatsApp:{" "}
+              <a
+                href={`https://wa.me/${SITE.whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan underline min-h-[44px] inline-flex items-center"
+              >
+                +{SITE.whatsappNumber}
+              </a>
+            </li>
+          </ul>
         </section>
       </div>
     </div>

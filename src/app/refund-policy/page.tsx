@@ -25,7 +25,7 @@ export default function RefundPage() {
       <PageHero
         eyebrow="LEGAL · REFUNDS"
         title="Cancellation & Refund Policy"
-        sub="Clear terms regarding digital goods and software source code delivery."
+        sub="Last updated: [FILL IN date]"
       />
 
       <div className="mx-auto max-w-4xl px-6 py-14 space-y-10">
@@ -38,7 +38,7 @@ export default function RefundPage() {
         </section>
 
         <section className="card p-8 space-y-4">
-          <h2 className="text-xl font-bold text-ink">Full Refund Guarantee</h2>
+          <h2 className="text-xl font-bold text-ink">When you get a full refund</h2>
           <p className="text-sm leading-relaxed text-mist">We will promptly issue a 100% full refund if:</p>
           <ul className="space-y-2.5 text-sm text-mist">
             <li className="flex items-start gap-2">
@@ -57,6 +57,13 @@ export default function RefundPage() {
         </section>
 
         <section className="card p-8 space-y-4">
+          <h2 className="text-xl font-bold text-ink">Setup Guarantee</h2>
+          <p className="text-sm leading-relaxed text-mist">
+            Setup guarantee: [FILL IN]
+          </p>
+        </section>
+
+        <section className="card p-8 space-y-4">
           <h2 className="text-xl font-bold text-ink">Technical Assistance</h2>
           <p className="text-sm leading-relaxed text-mist">
             If you encounter any difficulty running or installing dependencies on your machine, please visit our{" "}
@@ -65,6 +72,28 @@ export default function RefundPage() {
             </Link>{" "}
             or message us directly on WhatsApp, and our team will guide you through setup until it is running smoothly.
           </p>
+        </section>
+
+        <section className="card p-8 space-y-4">
+          <h2 className="text-xl font-bold text-ink">Contact</h2>
+          <p className="text-sm leading-relaxed text-mist">
+            For refund or cancellation requests, reach out directly:
+          </p>
+          <ul className="text-sm text-mist space-y-1.5 font-mono">
+            <li>Business / Owner: <span className="text-ink">[FILL IN business/owner name]</span></li>
+            <li>Email: <span className="text-ink">[FILL IN email]</span></li>
+            <li>
+              WhatsApp:{" "}
+              <a
+                href={`https://wa.me/${SITE.whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan underline min-h-[44px] inline-flex items-center"
+              >
+                +{SITE.whatsappNumber}
+              </a>
+            </li>
+          </ul>
         </section>
       </div>
     </div>

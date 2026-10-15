@@ -24,7 +24,7 @@ export default function TermsPage() {
       <PageHero
         eyebrow="LEGAL · POLICIES"
         title="Terms of Service"
-        sub={`Last updated: ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
+        sub="Last updated: [FILL IN date]"
       />
 
       <div className="mx-auto max-w-4xl px-6 py-14 space-y-10">
@@ -53,6 +53,28 @@ export default function TermsPage() {
             investment, or trading advice. Trading in equities, derivatives, and crypto assets carries significant risk of
             loss.
           </p>
+        </section>
+
+        <section className="card p-8 space-y-4">
+          <h2 className="text-xl font-bold text-ink">4. Contact</h2>
+          <p className="text-sm leading-relaxed text-mist">
+            If you have questions about these terms, reach out directly:
+          </p>
+          <ul className="text-sm text-mist space-y-1.5 font-mono">
+            <li>Business / Owner: <span className="text-ink">[FILL IN business/owner name]</span></li>
+            <li>Email: <span className="text-ink">[FILL IN email]</span></li>
+            <li>
+              WhatsApp:{" "}
+              <a
+                href={`https://wa.me/${SITE.whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan underline min-h-[44px] inline-flex items-center"
+              >
+                +{SITE.whatsappNumber}
+              </a>
+            </li>
+          </ul>
         </section>
       </div>
     </div>

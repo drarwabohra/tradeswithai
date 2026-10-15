@@ -2,24 +2,25 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Download, ArrowLeft, Bot } from "lucide-react";
 import { CopyButton } from "@/components/CopyButton";
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Backtest Any Indicator Using Claude AI · Master Prompt",
-  description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with an interactive HTML performance report.",
+  title: "Backtest any TradingView indicator using Claude AI · Master Prompt",
+  description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with a self-contained HTML report with inline SVG charts.",
   alternates: { canonical: "/resources/backtest-indicator-with-ai" },
   openGraph: {
-    title: "Backtest Any Indicator Using Claude AI · Master Prompt",
-    description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with an interactive HTML performance report.",
+    title: "Backtest any TradingView indicator using Claude AI · Master Prompt",
+    description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with a self-contained HTML report with inline SVG charts.",
     url: "/resources/backtest-indicator-with-ai",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Backtest Any Indicator Using Claude AI · Master Prompt",
-    description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with an interactive HTML performance report.",
+    title: "Backtest any TradingView indicator using Claude AI · Master Prompt",
+    description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with a self-contained HTML report with inline SVG charts.",
   },
 };
 
-const promptText = `You are going to turn a TradingView INDICATOR into a fully backtested STRATEGY, and give me a professional report at the end. Work through the steps in order. Do not skip ahead.*
+const promptText = `You are going to turn a TradingView INDICATOR into a fully backtested STRATEGY, and give me a professional report at the end. Work through the steps in order. Do not skip ahead.
 
 THE INDICATOR: \`SuperTrend\`
 
@@ -36,8 +37,8 @@ Headline: number of trades · win rate · average win · average loss · net ret
 Quality: profit factor · expectancy per trade · average holding period in bars · time in market as a percentage · best and worst single trade · longest run of consecutive losses · number of raw signals vs number of trades actually taken, so I can see how many the regime filter removed
 Benchmark: buy-and-hold on the same ticker, same start date, same starting balance — net return, CAGR, max drawdown and longest time underwater, side by side
 Regime split: classify every bar as UP, SIDEWAYS or DOWN using the instrument's own 200-day moving average and its slope, then report the strategy's return, win rate and trade count separately in each. State the classification rule on the panel.
-Cost sensitivity:** the headline table re-run at zero commission, at my commission, and at double my commission
-Charts (inline SVG only):** equity curve vs buy-and-hold · underwater/drawdown curve · monthly returns heatmap · a bar chart of every individual trade's return*
+Cost sensitivity: the headline table re-run at zero commission, at my commission, and at double my commission
+Charts (inline SVG only): equity curve vs buy-and-hold · underwater/drawdown curve · monthly returns heatmap · a bar chart of every individual trade's return
 
 WHAT THIS MEANS — a written section, in plain English, answering: Is the edge in the entries or the exits? Is the result carried by a handful of trades? Would buying and holding have beaten it? In which market regime does this actually work — and in which does it lose? What single change would most likely break this result? Be blunt. If the strategy is unimpressive, say so.
 
@@ -58,11 +59,10 @@ export default function ArticlePage() {
           <b>AI WORKFLOW</b> · PROMPT TEMPLATE
         </p>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-ink leading-tight">
-          Backtest any Trading Indicator using Claude AI
+          Backtest any TradingView indicator using Claude AI
         </h1>
         <p className="text-lg text-mist leading-relaxed text-pretty">
-          Turn any indicator (MACD, RSI, VWAP, Supertrend, etc.) into a professional strategy backtest with a beautiful
-          HTML report. No Pine Script or paid platform required.
+          Turn any indicator (MACD, RSI, VWAP, Supertrend, etc.) into a professional strategy backtest with a self-contained HTML report with inline SVG charts. No Pine Script or paid platform required.
         </p>
       </header>
 
@@ -70,12 +70,12 @@ export default function ArticlePage() {
         <section>
           <h2 className="text-2xl font-bold text-ink mb-4">How it works</h2>
           <p className="text-mist leading-relaxed mb-4">
-            Writing backtesting code from scratch takes hours. By leveraging Claude 3.5 Sonnet or ChatGPT, you can generate
+            Writing backtesting code from scratch takes hours. By leveraging Claude or ChatGPT, you can generate
             a complete, leak-free Python backtesting engine using public Yahoo Finance data in seconds.
           </p>
           <p className="text-mist leading-relaxed">
             The prompt below explicitly instructs the AI to enforce realistic execution (signal on bar N fills on bar N+1&apos;s
-            open), test across regimes (bull, sideways, bear), apply commissions, and render an interactive HTML dashboard.
+            open), test across regimes (bull, sideways, bear), apply commissions, and render a self-contained HTML report with inline SVG charts.
           </p>
         </section>
 
@@ -98,7 +98,7 @@ export default function ArticlePage() {
         <section>
           <h2 className="text-2xl font-bold text-ink mb-4">What does the output look like?</h2>
           <p className="text-mist leading-relaxed mb-6">
-            When you run the generated Python script, it creates a self-contained, offline HTML report with inline SVG charts,
+            When you run the generated Python script, it creates a self-contained HTML report with inline SVG charts,
             drawdown metrics, and regime-segmented return analysis.
           </p>
 
@@ -117,6 +117,29 @@ export default function ArticlePage() {
               className="btn-primary shrink-0 min-h-[44px] flex items-center gap-2"
             >
               <Download size={18} /> Download Sample PDF
+            </a>
+          </div>
+        </section>
+
+        {/* 39. CTA block */}
+        <section className="card p-8 sm:p-10 text-center border-lime/30 bg-deep/50">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+            Prefer a ready-made tool? See the 5 screeners
+          </h2>
+          <p className="mt-3 text-sm text-mist max-w-lg mx-auto leading-relaxed">
+            Skip coding from scratch. Run verified Python scanners for breakouts, wedges, momentum, and insider filings on your machine.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3.5">
+            <Link href="/products" className="btn-primary min-h-[44px]">
+              Compare screeners →
+            </Link>
+            <a
+              href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost !border-lime/40 text-lime hover:!border-lime min-h-[44px]"
+            >
+              Inquire on WhatsApp
             </a>
           </div>
         </section>

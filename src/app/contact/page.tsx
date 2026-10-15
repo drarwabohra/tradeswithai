@@ -66,9 +66,9 @@ export default function ContactPage() {
             </a>
 
             <div className="card p-6">
-              <h2 className="text-lg font-bold text-ink mb-1">Send a Message</h2>
+              <h2 className="text-lg font-bold text-ink mb-1">Prepare your WhatsApp message</h2>
               <p className="text-xs text-mist mb-5">
-                Fill out the quick form below to prepare your inquiry.
+                Fill this in and we&apos;ll open WhatsApp with your message ready to send.
               </p>
               <ContactForm />
             </div>
@@ -107,7 +107,7 @@ export default function ContactPage() {
 
             <div className="rounded-lg border border-hairline bg-abyss/60 p-4 text-xs text-dim leading-relaxed font-mono">
               <p className="text-mist font-semibold mb-1">Target Response Time</p>
-              Code sent within 12 hours of payment confirmation (usually under 1 hour).
+              Usually under 1 hour, [FILL IN hours] IST
             </div>
           </aside>
         </div>

@@ -1,17 +1,56 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SITE_URL, SITE } from "@/lib/site";
-import { catalog, findProduct } from "@/lib/catalog";
+import { catalog, findProduct, type Product } from "@/lib/catalog";
 import { formatINR } from "@/lib/format";
 import { BuyBar } from "@/components/BuyBar";
+import { GalleryLightbox } from "@/components/GalleryLightbox";
 
 type Props = { params: Promise<{ id: string }> };
 
 export const dynamicParams = false;
 export function generateStaticParams() {
   return catalog.map((p) => ({ id: p.id }));
+}
+
+const VIDEO_DURATIONS: Record<string, string> = {
+  "breakout-screener": "1:04",
+  "falling-wedge-screener": "1:07",
+  "crypto-breakout-scanner": "0:41",
+  "insider-trading-screener": "1:07",
+  "momentum-value-screener": "0:53",
+};
+
+function getProductSpecs(product: Product) {
+  let dataSource = "[FILL IN]";
+  if (product.id === "crypto-breakout-scanner") {
+    dataSource = "Hyperliquid public API ([FILL IN delay])";
+  } else if (product.id === "insider-trading-screener") {
+    dataSource = "Official disclosure filings ([FILL IN sources], not real-time)";
+  } else if (product.id === "momentum-value-screener") {
+    dataSource = "Yahoo Finance (delayed market data)";
+  }
+
+  let extraTools = "[FILL IN]";
+  if (product.id === "breakout-screener" || product.id === "crypto-breakout-scanner") {
+    extraTools = "Telegram Bot Token (optional)";
+  } else if (product.id === "falling-wedge-screener") {
+    extraTools = "FastAPI, Node.js (for frontend)";
+  } else if (product.id === "insider-trading-screener" || product.id === "momentum-value-screener") {
+    extraTools = "Node.js (for frontend)";
+  }
+
+  return [
+    { label: "Data source and delay", value: dataSource },
+    { label: "Tested on (OS)", value: "[FILL IN]" },
+    { label: "Python version", value: "Python 3.10+" },
+    { label: "Extra tools needed", value: extraTools },
+    { label: "What you get", value: product.whatYouGet },
+    { label: "Updates", value: "[FILL IN]" },
+    { label: "Support", value: "Free setup help via WhatsApp ([FILL IN])" },
+    { label: "Licence", value: "Personal single-user license (run and modify locally; no redistribution)" },
+  ];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -48,6 +87,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const product = findProduct((await params).id);
   if (!product) notFound();
+
+  const specs = getProductSpecs(product);
 
   const schema = {
     "@context": "https://schema.org",
@@ -93,12 +134,41 @@ export default async function ProductPage({ params }: Props) {
             >
               Inquire on WhatsApp
             </a>
+            <Link
+              href="/contact"
+              className="mt-3 flex min-h-[44px] items-center text-sm text-cyan hover:underline underline-offset-4"
+              aria-label="Ask about setup on our contact page"
+            >
+              Ask about setup →
+            </Link>
+
+            {/* 29. How buying works mini-list */}
+            <div className="mt-5 border-t border-hairline pt-4">
+              <p className="font-mono text-xs uppercase tracking-wider text-ink font-semibold mb-2.5">How buying works</p>
+              <ol className="space-y-1.5 text-xs text-mist list-decimal list-inside leading-relaxed">
+                <li>Message on WhatsApp</li>
+                <li>We check your PC setup</li>
+                <li>Pay ([FILL IN payment methods])</li>
+                <li>Code + setup guide within 12 hours</li>
+                <li>Free setup help</li>
+              </ol>
+            </div>
+
+            {/* 30. Disclaimer repeated under price card */}
+            <p className="mt-4 text-[13px] leading-relaxed text-mist border-t border-hairline pt-3">
+              Software for education and analysis only. Not investment advice. We are not a SEBI-registered adviser.
+            </p>
           </section>
 
           <section className="mt-10" aria-labelledby="demo-heading">
-            <h2 id="demo-heading" className="text-2xl font-bold text-ink">
-              See it in use.
-            </h2>
+            <div className="flex items-center gap-3">
+              <h2 id="demo-heading" className="text-2xl font-bold text-ink">
+                See it in use.
+              </h2>
+              <span className="rounded border border-hairline bg-surface px-2.5 py-1 font-mono text-xs text-cyan">
+                {VIDEO_DURATIONS[product.id] || "1:00"}
+              </span>
+            </div>
             <div className="mt-5 aspect-[4/3] overflow-hidden rounded-xl border border-hairline bg-surface">
               <video
                 src={product.video}
@@ -109,33 +179,14 @@ export default async function ProductPage({ params }: Props) {
                 aria-label={`${product.name} demonstration`}
                 className="h-full w-full object-contain"
               >
+                <track kind="captions" src="" label="English" />
                 <a href={product.video}>Download the demo video</a>
               </video>
             </div>
             <p className="mt-3 text-sm text-mist">
               Product demonstration. Review the filters and interface before buying.
             </p>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              {product.gallery.map((src, index) => (
-                <a
-                  href={src}
-                  key={src}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="relative block aspect-[4/3] overflow-hidden rounded-xl border border-hairline bg-surface min-h-[44px]"
-                  aria-label={`Open ${product.name} screenshot ${index + 1} in a new tab`}
-                >
-                  <Image
-                    src={src}
-                    alt={`${product.name} screenshot ${index + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 90vw, 400px"
-                    priority={index === 0}
-                    className="object-contain p-2"
-                  />
-                </a>
-              ))}
-            </div>
+            <GalleryLightbox images={product.gallery} productName={product.name} />
           </section>
 
           <section className="mt-12 border-t border-hairline pt-8">
@@ -160,6 +211,23 @@ export default async function ProductPage({ params }: Props) {
               </Link>{" "}
               and ask us about setup if anything is unclear.
             </p>
+          </section>
+
+          {/* 28. Specs box above What you receive */}
+          <section className="mt-12 border-t border-hairline pt-8" aria-labelledby="specs-heading">
+            <h2 id="specs-heading" className="text-2xl font-bold text-ink">
+              Specs.
+            </h2>
+            <div className="mt-5 overflow-hidden rounded-xl border border-hairline bg-surface">
+              <dl className="divide-y divide-hairline">
+                {specs.map((spec) => (
+                  <div key={spec.label} className="grid grid-cols-1 sm:grid-cols-[13rem_1fr] p-4 text-sm gap-1 sm:gap-4">
+                    <dt className="font-mono text-xs uppercase tracking-wider text-dim">{spec.label}</dt>
+                    <dd className="text-ink font-medium">{spec.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </section>
 
           <section className="mt-12 border-t border-hairline pt-8">
@@ -187,7 +255,7 @@ export default async function ProductPage({ params }: Props) {
                 </summary>
                 <p className="pb-4 text-sm leading-7 text-mist">
                   Contact us directly on WhatsApp or via our{" "}
-                  <Link href="/contact" className="text-cyan underline">
+                  <Link href="/contact" className="text-cyan underline" aria-label="Contact page">
                     contact page
                   </Link>
                   , and we will verify your payment and send your files right away.
@@ -223,9 +291,27 @@ export default async function ProductPage({ params }: Props) {
           <Link
             href="/contact"
             className="mt-3 flex min-h-[44px] items-center text-sm text-cyan hover:underline underline-offset-4"
+            aria-label="Ask about setup on our contact page"
           >
             Ask about setup →
           </Link>
+
+          {/* 29. How buying works mini-list */}
+          <div className="mt-6 border-t border-hairline pt-5">
+            <p className="font-mono text-xs uppercase tracking-wider text-ink font-semibold mb-3">How buying works</p>
+            <ol className="space-y-2 text-xs text-mist list-decimal list-inside leading-relaxed">
+              <li>Message on WhatsApp</li>
+              <li>We check your PC setup</li>
+              <li>Pay ([FILL IN payment methods])</li>
+              <li>Code + setup guide within 12 hours</li>
+              <li>Free setup help</li>
+            </ol>
+          </div>
+
+          {/* 30. Disclaimer repeated under price card */}
+          <p className="mt-4 text-[13px] leading-relaxed text-mist border-t border-hairline pt-4">
+            Software for education and analysis only. Not investment advice. We are not a SEBI-registered adviser.
+          </p>
         </aside>
       </div>
       <BuyBar price={product.price} name={product.name} />

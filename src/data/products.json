@@ -113,7 +113,7 @@
     "faqs": [
       {
         "question": "Does it track live filings?",
-        "answer": "Yes, it tracks the latest filings from official exchanges."
+        "answer": "It reads official disclosure filings ([FILL IN sources]) after they are published. It is not real-time."
       },
       {
         "question": "Can I export the data?",

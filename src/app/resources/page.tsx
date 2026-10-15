@@ -50,7 +50,7 @@ export default function ResourcesPage() {
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-mist">
                 Use our 5-step master prompt to turn any TradingView indicator into a standalone Python strategy with
-                realistic execution, slippage, and an interactive SVG performance report.
+                realistic execution, slippage, and a self-contained HTML report with inline SVG charts.
               </p>
             </div>
             <div className="mt-8 flex items-center justify-between border-t border-hairline pt-4">
