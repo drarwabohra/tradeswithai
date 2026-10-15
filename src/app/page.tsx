@@ -3,8 +3,8 @@ import Hero from "@/components/home/Hero";
 import {
   Proof,
   ProductLine,
-  StepByStep,
   TheFullShelf,
+  StepByStep,
   FreeLibrary,
   Final,
 } from "@/components/home/Chapters";
@@ -14,6 +14,18 @@ export const metadata: Metadata = {
   title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
   description:
     "Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python source code included. One-time payment.",
+  openGraph: {
+    title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
+    description:
+      "Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python source code included. One-time payment.",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
+    description:
+      "Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python source code included. One-time payment.",
+  },
 };
 
 export default function Home() {

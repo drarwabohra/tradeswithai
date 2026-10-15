@@ -113,7 +113,10 @@ export function Reveal({
   );
 }
 
-/** Counts up from 0 when scrolled into view. */
+/**
+ * Counts up from 0 when scrolled into view.
+ * Renders the real final number in server HTML so SSR & SEO always show real numbers.
+ */
 export function CountUp({
   to,
   decimals = 0,
@@ -126,29 +129,52 @@ export function CountUp({
   duration?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [val, setVal] = useState(0);
+  // Default to final value so SSR output and fallback HTML renders the actual figure!
+  const [val, setVal] = useState<number>(to);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Respect reduced motion - leave the real number untouched
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
     let raf = 0;
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      io.disconnect();
-      const start = performance.now();
-      const step = (t: number) => {
-        const p = Math.min(1, (t - start) / duration);
-        const eased = 1 - Math.pow(1 - p, 3);
-        setVal(to * eased);
-        if (p < 1) raf = requestAnimationFrame(step);
-      };
-      raf = requestAnimationFrame(step);
-    });
+    let animated = false;
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting || animated) return;
+        animated = true;
+        io.disconnect();
+
+        // Start animation from 0 to target
+        setVal(0);
+        const start = performance.now();
+        const step = (t: number) => {
+          const p = Math.min(1, (t - start) / duration);
+          const eased = 1 - Math.pow(1 - p, 3);
+          setVal(to * eased);
+          if (p < 1) {
+            raf = requestAnimationFrame(step);
+          } else {
+            setVal(to);
+          }
+        };
+        raf = requestAnimationFrame(step);
+      },
+      { threshold: 0.1 }
+    );
+
     io.observe(el);
     return () => {
       io.disconnect();
-      cancelAnimationFrame(raf);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, [to, duration]);
+
   return (
     <span ref={ref}>
       {val.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}

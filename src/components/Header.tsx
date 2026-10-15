@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import site from "@/data/site.json";
+import { SITE } from "@/lib/site";
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label={`${site.brandName} home`}>
+    <Link href="/" className="flex items-center gap-2.5 min-h-[44px]" aria-label={`${SITE.name} home`}>
       <span className="relative grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-cyan to-lime shadow-[0_0_24px_-4px_rgb(65_196_225/0.7)]">
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="#06202b" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 17l5-6 4 3 8-9" />
@@ -57,7 +57,7 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-md px-3.5 py-2 text-sm font-medium transition hover:text-ink ${
+              className={`rounded-md px-3.5 py-2 text-sm font-medium transition hover:text-ink min-h-[44px] flex items-center ${
                 path === item.href ? "text-ink font-semibold" : "text-mist"
               }`}
             >
@@ -68,10 +68,10 @@ export default function Header() {
 
         <div className="hidden items-center gap-3 md:flex">
           <a
-            href={`https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent("Hi, I want to inquire about TradesWithAI screeners.")}`}
+            href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to inquire about TradesWithAI screeners.")}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary !py-2 !px-4 !text-xs !font-bold"
+            className="btn-primary !py-2 !px-4 !text-xs !font-bold min-h-[44px]"
           >
             Inquire on WhatsApp
           </a>
@@ -79,7 +79,7 @@ export default function Header() {
 
         <button
           type="button"
-          className="p-2 md:hidden"
+          className="p-2 md:hidden min-h-[44px] min-w-[44px] flex flex-col justify-center items-center"
           aria-label="Menu"
           aria-expanded={mobile}
           onClick={() => setMobile((m) => !m)}
@@ -96,7 +96,7 @@ export default function Header() {
             <Link
               key={i.href}
               href={i.href}
-              className={`block border-b border-hairline py-3.5 text-sm font-medium ${
+              className={`block border-b border-hairline py-3.5 text-sm font-medium min-h-[44px] flex items-center ${
                 path === i.href ? "text-cyan" : "text-ink"
               }`}
             >
@@ -105,14 +105,14 @@ export default function Header() {
           ))}
           <div className="mt-5 flex flex-col gap-2.5">
             <a
-              href={`https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent("Hi, I want to inquire about TradesWithAI screeners.")}`}
+              href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to inquire about TradesWithAI screeners.")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary w-full justify-center"
+              className="btn-primary w-full justify-center min-h-[44px]"
             >
               Inquire on WhatsApp
             </a>
-            <Link href="/contact" className="btn-ghost w-full justify-center">
+            <Link href="/contact" className="btn-ghost w-full justify-center min-h-[44px]">
               Ask about setup
             </Link>
           </div>

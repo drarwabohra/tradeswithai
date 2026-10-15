@@ -1,8 +1,27 @@
 import type { MetadataRoute } from "next";
-import site from "@/data/site.json";
+import { SITE_URL } from "@/lib/site";
 import { catalog } from "@/lib/catalog";
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ["/", "/products", "/contact", ...catalog.map(p => `/products/${p.id}`)]
-    .map(path => ({ url: new URL(path, site.url).href }));
-  // No fabricated lastModified timestamps; add real content revision dates if tracked.
+  const staticRoutes = [
+    "",
+    "/products",
+    "/resources",
+    "/resources/backtest-indicator-with-ai",
+    "/contact",
+    "/terms",
+    "/privacy",
+    "/refund-policy",
+  ];
+
+  const productRoutes = catalog.map((p) => `/products/${p.id}`);
+
+  const allRoutes = [...staticRoutes, ...productRoutes];
+
+  return allRoutes.map((route) => ({
+    url: `${SITE_URL}${route}`,
+    lastModified: new Date(),
+    changeFrequency: route === "" ? "daily" : "weekly",
+    priority: route === "" ? 1.0 : route.startsWith("/products") ? 0.8 : 0.6,
+  }));
 }

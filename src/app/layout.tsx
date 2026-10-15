@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import site from "@/data/site.json";
+import { SITE_URL, SITE } from "@/lib/site";
 import "./globals.css";
 
 const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin"] });
@@ -17,17 +17,28 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(SITE_URL),
   title: { default: "Trading Screeners with Source Code | TradesWithAI", template: "%s · TradesWithAI" },
   description: "Stock and crypto screeners you run yourself. Compare features, watch real demos, and acquire full source code with a one-time payment.",
-  openGraph: { type: "website", siteName: site.brandName, locale: "en_IN" },
-  twitter: { card: "summary_large_image" },
+  openGraph: {
+    type: "website",
+    siteName: "TradesWithAI",
+    title: "Trading Screeners with Source Code | TradesWithAI",
+    description: "Stock and crypto screeners you run yourself. Compare features, watch real demos, and acquire full source code with a one-time payment.",
+    url: SITE_URL,
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trading Screeners with Source Code | TradesWithAI",
+    description: "Stock and crypto screeners you run yourself. Compare features, watch real demos, and acquire full source code with a one-time payment.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${archivo.variable} ${plexMono.variable} ${serif.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-abyss text-ink font-sans">
+      <body className="flex min-h-full flex-col bg-abyss text-ink font-sans pb-24 md:pb-0">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-lime focus:p-3 focus:font-bold focus:text-abyss"
@@ -42,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Floating WhatsApp Action Button with Live Pulse */}
         <a
-          href={`https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
+          href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="whatsapp-float group"

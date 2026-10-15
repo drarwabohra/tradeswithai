@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Pin, useTyping } from "@/components/motion";
-import site from "@/data/site.json";
+import { SITE } from "@/lib/site";
 
 const PHRASES = [
   "Scan NSE & US stocks for volume breakouts at the open",
@@ -15,11 +15,11 @@ const PHRASES = [
 const HEADLINE = ["Build", "your", "shortlist.", "Then", "read", "the", "chart."];
 
 const PATHS = [
-  { n: "01", t: "Screeners", s: "5 ready-to-run builds", href: "#shelf", c: "#a8e10d" },
-  { n: "02", t: "Conveyor", s: "Watch them roll off", href: "#conveyor", c: "#41c4e1" },
-  { n: "03", t: "How it works", s: "Direct WhatsApp setup", href: "#setup", c: "#f26419" },
-  { n: "04", t: "Free library", s: "AI backtest master prompt", href: "/resources", c: "#a8e10d" },
-  { n: "05", t: "Custom check", s: "Ask before you buy", href: "/contact", c: "#41c4e1" },
+  { n: "01", t: "Proof", s: "Stats & architecture", href: "#proof", c: "#41c4e1" },
+  { n: "02", t: "Conveyor", s: "Watch them roll off", href: "#conveyor", c: "#a8e10d" },
+  { n: "03", t: "Store Shelf", s: "All 5 ready builds", href: "#shelf", c: "#41c4e1" },
+  { n: "04", t: "How it works", s: "Direct WhatsApp setup", href: "#setup", c: "#f26419" },
+  { n: "05", t: "Free library", s: "AI backtest prompt", href: "#resources", c: "#a8e10d" },
 ];
 
 function AppWindow({ text }: { text: string }) {
@@ -66,11 +66,11 @@ function AppWindow({ text }: { text: string }) {
                 <span className="cw-caret" />
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-hairline pt-2.5">
-                <span className="chip !py-0.5 !text-[0.62rem] text-lime border-lime/30">
+                <span className="chip !py-0.5 !text-[0.62rem] text-lime border-lime/30 min-h-[32px]">
                   <span className="h-1.5 w-1.5 rounded-full bg-lime" /> Local Engine
                 </span>
-                <span className="chip !py-0.5 !text-[0.62rem]">Telegram Alerts</span>
-                <span className="chip !py-0.5 !text-[0.62rem]">Source Code</span>
+                <span className="chip !py-0.5 !text-[0.62rem] min-h-[32px]">Telegram Alerts</span>
+                <span className="chip !py-0.5 !text-[0.62rem] min-h-[32px]">Source Code</span>
                 <span className="ml-auto flex items-center gap-1 font-mono text-[0.65rem] text-cyan">
                   <span className="h-2 w-2 rounded-full bg-cyan shadow-[0_0_10px_rgb(65_196_225/0.8)]" /> READY
                 </span>
@@ -79,7 +79,7 @@ function AppWindow({ text }: { text: string }) {
           </div>
           <ul className="mt-4 flex flex-wrap gap-2 text-[0.65rem] text-dim">
             {["Yahoo Finance & public feeds", "No brokerage connection needed", "Clean standalone scripts"].map((c) => (
-              <li key={c} className="rounded-full border border-hairline px-2.5 py-0.5 text-mist">
+              <li key={c} className="rounded-full border border-hairline px-2.5 py-1 text-mist">
                 ✓ {c}
               </li>
             ))}
@@ -96,7 +96,6 @@ export default function Hero() {
   return (
     <Pin vh={420} className="border-b border-hairline" stageClassName="grid">
       {(k) => {
-        // App window starts centered and prominent, then moves right and scales down
         const w = Math.min(1, k / 0.35);
         const winStyle = {
           transform: `translate(calc(${w} * 22vw), calc(${w} * 2vh)) scale(${1.08 - w * 0.28})`,
@@ -124,7 +123,7 @@ export default function Hero() {
                 className="eyebrow flex items-center gap-2.5 !text-cyan"
                 style={{ opacity: k < 0.05 ? 0 : 1, transition: "opacity .5s" }}
               >
-                <span className="live-dot" /> {site.brandName} · Stock & crypto screeners you run yourself
+                <span className="live-dot" /> {SITE.name} · Stock & crypto screeners you run yourself
               </p>
               <h1 className="mt-4 max-w-[13ch] text-[clamp(2.4rem,5vw,4.5rem)] font-extrabold leading-[1.02] tracking-[-0.025em]">
                 {HEADLINE.map((wd, i) => (
@@ -150,17 +149,17 @@ export default function Hero() {
                   className="mt-7 flex flex-wrap gap-3.5"
                   style={{ opacity: "var(--t)", transform: "translateY(calc((1 - var(--t)) * 16px))" }}
                 >
-                  <a href="#conveyor" className="btn-primary" style={{ textShadow: "none" }}>
+                  <a href="#conveyor" className="btn-primary min-h-[44px]" style={{ textShadow: "none" }}>
                     Compare screeners →
                   </a>
-                  <Link href="/resources" className="btn-ghost" style={{ textShadow: "none" }}>
+                  <Link href="/resources" className="btn-ghost min-h-[44px]" style={{ textShadow: "none" }}>
                     Free AI resources
                   </Link>
                   <a
-                    href={`https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
+                    href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I want to acquire a trading screener.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-ghost !border-lime/40 text-lime hover:!border-lime"
+                    className="btn-ghost !border-lime/40 text-lime hover:!border-lime min-h-[44px]"
                     style={{ textShadow: "none" }}
                   >
                     Inquire on WhatsApp
@@ -168,13 +167,13 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Quick links to sections */}
+              {/* Quick links to sections 01-05 */}
               <div className="mt-10 grid max-w-[36rem] grid-cols-2 gap-2.5 sm:grid-cols-3">
                 {PATHS.map((p, i) => (
                   <a
                     key={p.n}
                     href={p.href}
-                    className="seg card card-hover block p-3.5 transition-all"
+                    className="seg card card-hover block p-3.5 transition-all min-h-[44px]"
                     style={{
                       ["--a" as string]: 0.55 + i * 0.06,
                       ["--b" as string]: 0.65 + i * 0.06,
@@ -184,7 +183,7 @@ export default function Hero() {
                       textShadow: "none",
                     }}
                   >
-                    <span className="font-mono text-[0.62rem] font-bold" style={{ color: p.c }}>
+                    <span className="font-mono text-[0.65rem] font-bold" style={{ color: p.c }}>
                       {p.n}
                     </span>
                     <b className="block text-sm font-bold text-ink">{p.t}</b>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import site from "@/data/site.json";
+import { SITE } from "@/lib/site";
 import { Logo } from "./Header";
 
 const COLS = [
@@ -27,8 +27,8 @@ const COLS = [
     h: "Support",
     links: [
       ["Contact & Setup", "/contact"],
-      ["WhatsApp Inquiry", `https://wa.me/${site.whatsappNumber}`],
-      ["Email Support", `mailto:${site.supportEmail}`],
+      ["WhatsApp Inquiry", `https://wa.me/${SITE.whatsappNumber}`],
+      ["System Verification", "/contact"],
     ],
   },
   {
@@ -57,10 +57,13 @@ export default function Footer() {
         {COLS.map((c) => (
           <div key={c.h}>
             <p className="eyebrow">{c.h}</p>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 space-y-1">
               {c.links.map(([l, h]) => (
                 <li key={h}>
-                  <Link href={h} className="text-sm text-mist transition hover:text-ink">
+                  <Link
+                    href={h}
+                    className="text-sm text-mist transition hover:text-ink min-h-[44px] flex items-center"
+                  >
                     {l}
                   </Link>
                 </li>
@@ -71,7 +74,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-hairline bg-abyss">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-6 py-6 font-mono text-[0.68rem] leading-relaxed text-dim sm:flex-row">
-          <p>© {new Date().getFullYear()} {site.brandName}. Software and education only. We are not a SEBI-registered adviser.</p>
+          <p>© {new Date().getFullYear()} {SITE.name}. Software and education only. We are not a SEBI-registered adviser.</p>
           <p>Flat ₹5,000 one-time payment per screener. No recurring subscriptions.</p>
         </div>
       </div>

@@ -1,14 +1,8 @@
 {
-  "url": "https://tradeswithai.com",
+  "url": "https://tradeswithai.vercel.app",
   "brandName": "TradesWithAI",
   "upiId": "kausarbohra73@oksbi",
   "payeeName": "kausar hussain",
   "whatsappNumber": "918529261547",
-  "supportEmail": "kausarbohra73@gmail.com",
-  "deliveryHours": "12 hours",
-  "bankDetails": {
-    "accountName": "Trades With AI",
-    "accountNumber": "1234567890",
-    "ifsc": "HDFC0001234"
-  }
+  "deliveryHours": "12 hours"
 }

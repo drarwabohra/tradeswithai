@@ -79,6 +79,7 @@ body {
   padding: 0.75rem 1.25rem;
   font-size: 0.92rem;
   font-weight: 700;
+  min-height: 44px;
   transition:
     transform 0.2s ease,
     box-shadow 0.25s ease,
@@ -116,6 +117,7 @@ body {
   font-weight: 700;
   background: var(--color-lime);
   color: #06202b;
+  min-height: 44px;
   transition: transform 0.2s ease, box-shadow 0.25s ease;
 }
 .button-primary:hover {
@@ -134,6 +136,7 @@ body {
   border: 1px solid var(--color-hairline-strong);
   color: var(--color-ink);
   background: rgb(5 26 35 / 0.4);
+  min-height: 44px;
   transition: transform 0.2s ease, border-color 0.25s ease;
 }
 .button-secondary:hover {
@@ -191,6 +194,7 @@ body {
   background: var(--color-panel);
   color: var(--color-ink);
   font-size: 0.95rem;
+  min-height: 44px;
 }
 .field:focus {
   outline: none;
@@ -213,6 +217,20 @@ body {
   list-style: disc;
   color: var(--color-mist);
   line-height: 1.8;
+}
+
+/* ───────────────────────── Accessible Tap Targets & Mobile Padding ───────────────────────── */
+nav a,
+footer a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 860px) {
+  body {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
 }
 
 /* ───────────────────────── Keyframes ───────────────────────── */
@@ -397,7 +415,7 @@ body {
 /* WhatsApp floating button */
 .whatsapp-float {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
   right: 1.5rem;
   z-index: 50;
   display: flex;

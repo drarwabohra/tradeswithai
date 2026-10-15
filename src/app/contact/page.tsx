@@ -1,15 +1,117 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, Mail, MessageCircle, Monitor, Check } from "lucide-react";
-import site from "@/data/site.json";
-export const metadata: Metadata = { title: "Contact", alternates: { canonical: "/contact" } };
+import { ArrowUpRight, MessageCircle, Monitor, Check } from "lucide-react";
+import PageHero from "@/components/PageHero";
+import { SITE } from "@/lib/site";
+import ContactForm from "@/components/ContactForm";
+
+export const metadata: Metadata = {
+  title: "Contact & Setup Verification · TradesWithAI",
+  description: "Have questions about a screener, Python dependencies, or custom scanning logic? Get in touch directly.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact & Setup Verification · TradesWithAI",
+    description: "Have questions about a screener, Python dependencies, or custom scanning logic? Get in touch directly.",
+    url: "/contact",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact & Setup Verification · TradesWithAI",
+    description: "Have questions about a screener, Python dependencies, or custom scanning logic? Get in touch directly.",
+  },
+};
+
 export default function ContactPage() {
-  const message = new URLSearchParams({ text: "Hi, I have a question about a screener and its setup requirements." });
-  return <div className="site-container page-section">
-    <header className="page-heading"><p className="eyebrow"><span className="status-dot" /> LET’S TALK</p><h1>A little clarity.<br /><span className="text-accent">Before you start.</span></h1><p>Need help choosing a screener or checking your setup?<br className="hidden sm:block" /> Tell us what you want to scan. We’ll take it from there.</p></header>
-    <div className="contact-grid">
-      <a className="contact-option" href={`https://wa.me/${site.whatsappNumber}?${message}`}><MessageCircle size={28} strokeWidth={1.5} aria-hidden="true" /><h2>Start a conversation.</h2><p>Ask about features, setup requirements, or an existing purchase on WhatsApp.</p><span className="text-link">Chat on WhatsApp <ArrowUpRight size={18} aria-hidden="true" /></span></a>
-      <a className="contact-option" href={`mailto:${site.supportEmail}`}><Mail size={28} strokeWidth={1.5} aria-hidden="true" /><h2>Put it in an email.</h2><p>Share your questions or order details, and we’ll help you with the next step.</p><span className="text-link break-all">{site.supportEmail} <ArrowUpRight size={18} className="shrink-0" aria-hidden="true" /></span></a>
-      <aside className="setup-checklist"><Monitor size={24} strokeWidth={1.5} aria-hidden="true" /><h2>Helpful to include</h2><ul><li><Check size={15} aria-hidden="true" /> The screener you’re interested in</li><li><Check size={15} aria-hidden="true" /> Your operating system</li><li><Check size={15} aria-hidden="true" /> Your question or setup issue</li></ul><p>For an existing purchase, include your payment reference so we can find it.</p></aside>
+  const message = new URLSearchParams({
+    text: "Hi, I have a question about a screener and its setup requirements.",
+  });
+
+  return (
+    <div>
+      <PageHero
+        eyebrow="LET’S TALK · SETUP & SUPPORT"
+        title={
+          <>
+            A little clarity. <br />
+            <span className="text-cyan">Before you start.</span>
+          </>
+        }
+        sub="Need help choosing a screener or verifying your computer is ready? Message us directly. We will answer all your questions before you buy."
+      />
+
+      <div className="mx-auto max-w-6xl px-6 py-14">
+        <div className="grid gap-8 lg:grid-cols-2">
+          {/* Left Column: Quick WhatsApp + Form */}
+          <div className="space-y-6">
+            <a
+              className="card card-hover flex flex-col justify-between p-6 border-lime/30 min-h-[44px] group"
+              href={`https://wa.me/${SITE.whatsappNumber}?${message}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ ["--hc" as string]: "#a8e10d" }}
+            >
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="chip text-lime border-lime/40 min-h-[28px]">FASTEST RESPONSE</span>
+                  <MessageCircle size={24} className="text-lime" aria-hidden="true" />
+                </div>
+                <h2 className="mt-4 text-xl font-bold text-ink">Chat with us on WhatsApp</h2>
+                <p className="mt-2 text-sm leading-relaxed text-mist">
+                  Ask about features, setup requirements, operating systems, or get immediate file dispatch.
+                </p>
+              </div>
+              <span className="btn-primary mt-6 min-h-[44px] justify-between">
+                <span>Open WhatsApp Chat</span>
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </span>
+            </a>
+
+            <div className="card p-6">
+              <h2 className="text-lg font-bold text-ink mb-1">Send a Message</h2>
+              <p className="text-xs text-mist mb-5">
+                Fill out the quick form below to prepare your inquiry.
+              </p>
+              <ContactForm />
+            </div>
+          </div>
+
+          {/* Right Column: Setup checklist & guidelines */}
+          <aside className="card p-8 h-fit space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-cyan/15 text-cyan">
+                <Monitor size={22} strokeWidth={1.75} aria-hidden="true" />
+              </span>
+              <div>
+                <h2 className="text-lg font-bold text-ink">Helpful to include</h2>
+                <p className="text-xs text-mist">Speeds up verification</p>
+              </div>
+            </div>
+
+            <ul className="space-y-3.5 text-sm text-mist border-t border-hairline pt-5">
+              <li className="flex items-start gap-2.5">
+                <Check size={16} className="text-lime shrink-0 mt-0.5" aria-hidden="true" />
+                <span>The specific screener you are interested in (Breakout, Wedge, Crypto, etc.)</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Check size={16} className="text-lime shrink-0 mt-0.5" aria-hidden="true" />
+                <span>Your operating system (Windows, macOS, or Linux)</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Check size={16} className="text-lime shrink-0 mt-0.5" aria-hidden="true" />
+                <span>Whether you already have Python installed (3.10 or higher recommended)</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Check size={16} className="text-lime shrink-0 mt-0.5" aria-hidden="true" />
+                <span>Any custom scanning filters or markets you need</span>
+              </li>
+            </ul>
+
+            <div className="rounded-lg border border-hairline bg-abyss/60 p-4 text-xs text-dim leading-relaxed font-mono">
+              <p className="text-mist font-semibold mb-1">Target Response Time</p>
+              Under 1 hour during active market hours. Maximum 12 hours for manual code dispatch.
+            </div>
+          </aside>
+        </div>
+      </div>
     </div>
-  </div>;
+  );
 }

@@ -1,10 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Download, ArrowLeft, Bot } from "lucide-react";
 import { CopyButton } from "@/components/CopyButton";
 
-export const metadata = {
-  title: "Backtest any indicator using Claude AI",
-  description: "The exact prompt to turn any indicator into a fully backtested Python strategy.",
+export const metadata: Metadata = {
+  title: "Backtest Any Indicator Using Claude AI · Master Prompt",
+  description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with an interactive HTML performance report.",
+  alternates: { canonical: "/resources/backtest-indicator-with-ai" },
+  openGraph: {
+    title: "Backtest Any Indicator Using Claude AI · Master Prompt",
+    description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with an interactive HTML performance report.",
+    url: "/resources/backtest-indicator-with-ai",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Backtest Any Indicator Using Claude AI · Master Prompt",
+    description: "The exact 5-step prompt to turn any TradingView indicator into a fully backtested Python strategy with an interactive HTML performance report.",
+  },
 };
 
 const promptText = `You are going to turn a TradingView INDICATOR into a fully backtested STRATEGY, and give me a professional report at the end. Work through the steps in order. Do not skip ahead.*
@@ -33,67 +45,81 @@ OUTPUT CONTRACT — Render everything as ONE self-contained \`.html\` file calle
 
 export default function ArticlePage() {
   return (
-    <div className="document-page container mx-auto px-4 py-16 sm:py-20 max-w-4xl">
-      <Link href="/resources" className="inline-flex items-center gap-2 text-muted hover:text-foreground mb-10 text-sm font-medium">
+    <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
+      <Link
+        href="/resources"
+        className="inline-flex min-h-[44px] items-center gap-2 text-mist hover:text-ink mb-8 text-sm font-medium"
+      >
         <ArrowLeft size={16} /> Back to Resources
       </Link>
-      
-      <header className="mb-12 border-b border-line pb-12">
-        <div className="text-xs font-medium uppercase tracking-[0.18em] text-muted mb-4">AI Prompt</div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6 text-foreground leading-tight">
+
+      <header className="mb-12 border-b border-hairline pb-12">
+        <p className="eyebrow mb-3">
+          <b>AI WORKFLOW</b> · PROMPT TEMPLATE
+        </p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-ink leading-tight">
           Backtest any Trading Indicator using Claude AI
         </h1>
-        <p className="text-lg text-muted leading-relaxed text-pretty">
-          Turn any indicator (MACD, RSI, VWAP, Supertrend, etc.) into a professional strategy backtest with a beautiful HTML report. No Pine Script required.
+        <p className="text-lg text-mist leading-relaxed text-pretty">
+          Turn any indicator (MACD, RSI, VWAP, Supertrend, etc.) into a professional strategy backtest with a beautiful
+          HTML report. No Pine Script or paid platform required.
         </p>
       </header>
 
-      <div className="prose prose-invert max-w-none">
-        
-        <h2 className="text-2xl font-semibold text-foreground mt-10 mb-4 tracking-tight">How it works</h2>
-        <p className="text-muted leading-relaxed mb-6">
-          Writing backtesting code from scratch takes hours. By leveraging Claude 3.5 Sonnet or ChatGPT, you can generate a complete Python backtesting engine using libraries like <code>vectorbt</code> or <code>backtrader</code> in seconds. 
-        </p>
-        <p className="text-muted leading-relaxed mb-8">
-          The prompt below explicitly instructs the AI to fetch its own historical data from Yahoo Finance, simulate the strategy, and render an interactive HTML performance report so you can visually analyze the results.
-        </p>
+      <div className="space-y-12">
+        <section>
+          <h2 className="text-2xl font-bold text-ink mb-4">How it works</h2>
+          <p className="text-mist leading-relaxed mb-4">
+            Writing backtesting code from scratch takes hours. By leveraging Claude 3.5 Sonnet or ChatGPT, you can generate
+            a complete, leak-free Python backtesting engine using public Yahoo Finance data in seconds.
+          </p>
+          <p className="text-mist leading-relaxed">
+            The prompt below explicitly instructs the AI to enforce realistic execution (signal on bar N fills on bar N+1&apos;s
+            open), test across regimes (bull, sideways, bear), apply commissions, and render an interactive HTML dashboard.
+          </p>
+        </section>
 
-        <h2 className="text-2xl font-semibold text-foreground mt-10 mb-6 tracking-tight flex items-center gap-2">
-          <Bot size={24} className="text-muted" /> The Master Prompt
-        </h2>
-        
-        <div className="document-panel relative group overflow-hidden mb-12">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
-            <span className="text-xs font-mono text-muted">COPY THE PROMPT TO GET STARTED</span>
-            <CopyButton value={promptText} label="Master Prompt" />
+        <section id="prompt">
+          <h2 className="text-2xl font-bold text-ink mb-4 flex items-center gap-2">
+            <Bot size={24} className="text-cyan" /> The Master Prompt
+          </h2>
+
+          <div className="card overflow-hidden shadow-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline bg-deep px-5 py-3">
+              <span className="font-mono text-xs text-mist">COPY THE PROMPT INTO CLAUDE OR CHATGPT</span>
+              <CopyButton value={promptText} label="Master Prompt" />
+            </div>
+            <pre className="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm text-ink font-mono whitespace-pre-wrap wrap-anywhere leading-relaxed bg-abyss/60">
+              {promptText}
+            </pre>
           </div>
-          <pre className="p-5 sm:p-6 overflow-x-auto text-sm text-foreground font-mono whitespace-pre-wrap wrap-anywhere leading-relaxed m-0 bg-transparent">
-            {promptText}
-          </pre>
-        </div>
+        </section>
 
-        <h2 className="text-2xl font-semibold text-foreground mt-12 mb-4 tracking-tight">What does the output look like?</h2>
-        <p className="text-muted leading-relaxed mb-8">
-          When you run the generated Python script, it will create a beautiful, interactive HTML dashboard containing your equity curve, drawdowns, and key metrics like CAGR and Sharpe Ratio. 
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-ink mb-4">What does the output look like?</h2>
+          <p className="text-mist leading-relaxed mb-6">
+            When you run the generated Python script, it creates a self-contained, offline HTML report with inline SVG charts,
+            drawdown metrics, and regime-segmented return analysis.
+          </p>
 
-        <div className="document-panel p-8 mb-12 flex flex-col md:flex-row items-center gap-8 justify-between">
-          <div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Download Sample Report</h3>
-            <p className="text-muted text-sm max-w-md leading-relaxed">
-              We used this exact prompt to backtest a <strong>Supertrend</strong> strategy. Download the generated PDF report to see the quality of the output.
-            </p>
+          <div className="card p-8 flex flex-col md:flex-row items-center gap-6 justify-between border-cyan/30">
+            <div>
+              <h3 className="text-xl font-bold text-ink mb-2">Download Sample SuperTrend Report</h3>
+              <p className="text-mist text-sm max-w-md leading-relaxed">
+                We ran this exact prompt against a <strong>SuperTrend</strong> indicator on daily candles. Download the full
+                sample PDF report to inspect the structure and depth.
+              </p>
+            </div>
+            <a
+              href="/resources/super-trend-strategy-report.pdf"
+              target="_blank"
+              download
+              className="btn-primary shrink-0 min-h-[44px] flex items-center gap-2"
+            >
+              <Download size={18} /> Download Sample PDF
+            </a>
           </div>
-          <a 
-            href="/resources/super-trend-strategy-report.pdf" 
-            target="_blank"
-            download
-            className="button-primary shrink-0"
-          >
-            <Download size={18} /> Download Sample PDF
-          </a>
-        </div>
-
+        </section>
       </div>
     </div>
   );
