@@ -10,7 +10,9 @@ import { useEffect, useRef } from "react";
 export default function ParticleField({ boost = 0 }: { boost?: number }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const boostRef = useRef(boost);
-  boostRef.current = boost;
+  useEffect(() => {
+    boostRef.current = boost;
+  }, [boost]);
 
   useEffect(() => {
     const c = canvas.current;
@@ -44,41 +46,63 @@ export default function ParticleField({ boost = 0 }: { boost?: number }) {
       }));
     };
 
+    // Drawing is batched: one path per colour for the dots and one per strength band for the
+    // links, so a frame is a handful of draw calls instead of thousands.
+    const LINK_BANDS = [0.03, 0.06, 0.09, 0.12];
+    const DOT_COLOURS = ["rgba(65,196,225,0.55)", "rgba(168,225,13,0.55)"];
+    // The drift is slow, so 30 fps looks identical and halves the work; full rate during the dive.
+    let odd = false;
     const draw = () => {
       const b = boostRef.current;
+      odd = !odd;
+      if (odd && b === 0 && !still) {
+        if (visible) raf = requestAnimationFrame(draw);
+        return;
+      }
       ctx.clearRect(0, 0, w, h);
       const cx = w / 2;
       const cy = h / 2;
-      for (const p of pts) {
-        if (!still) {
-          p.x += p.vx * (1 + b * 6) + (cx - p.x) * 0.004 * b;
-          p.y += p.vy * (1 + b * 6) + (cy - p.y) * 0.004 * b;
+      if (!still) {
+        for (const p of pts) {
+          const step = b === 0 ? 2 : 1; // two frames' worth of drift when drawing every other frame
+          p.x += (p.vx * (1 + b * 6) + (cx - p.x) * 0.004 * b) * step;
+          p.y += (p.vy * (1 + b * 6) + (cy - p.y) * 0.004 * b) * step;
           if (p.x < -10) p.x = w + 10;
           if (p.x > w + 10) p.x = -10;
           if (p.y < -10) p.y = h + 10;
           if (p.y > h + 10) p.y = -10;
         }
+      }
+      for (let hue = 0; hue < 2; hue++) {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * (1 + b), 0, Math.PI * 2);
-        ctx.fillStyle = p.hue ? "rgba(168,225,13,0.55)" : "rgba(65,196,225,0.55)";
+        for (const p of pts) {
+          if (p.hue !== hue) continue;
+          const r = p.r * (1 + b);
+          ctx.moveTo(p.x + r, p.y);
+          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        }
+        ctx.fillStyle = DOT_COLOURS[hue];
         ctx.fill();
       }
-      // faint links between near neighbours
+      // Faint links between near neighbours, grouped by strength.
       ctx.lineWidth = 0.6;
+      const bands = LINK_BANDS.map(() => new Path2D());
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
           const dx = pts[i].x - pts[j].x;
           const dy = pts[i].y - pts[j].y;
           const d2 = dx * dx + dy * dy;
           if (d2 < 9000) {
-            ctx.strokeStyle = `rgba(65,196,225,${(0.12 * (1 - d2 / 9000)).toFixed(3)})`;
-            ctx.beginPath();
-            ctx.moveTo(pts[i].x, pts[i].y);
-            ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.stroke();
+            const band = Math.min(LINK_BANDS.length - 1, Math.floor((1 - d2 / 9000) * LINK_BANDS.length));
+            bands[band].moveTo(pts[i].x, pts[i].y);
+            bands[band].lineTo(pts[j].x, pts[j].y);
           }
         }
       }
+      bands.forEach((path, i) => {
+        ctx.strokeStyle = `rgba(65,196,225,${LINK_BANDS[i]})`;
+        ctx.stroke(path);
+      });
       if (!still && visible) raf = requestAnimationFrame(draw);
     };
 

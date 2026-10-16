@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SITE } from "@/lib/site";
 import { catalog } from "@/lib/catalog";
 
@@ -26,12 +26,16 @@ export default function Header() {
   const path = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const topSentinel = useRef<HTMLDivElement>(null);
 
+  // "Scrolled" = the 12px marker at the top of the page has left the screen. The browser
+  // reports this itself, so nothing runs on scroll.
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 12);
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    const el = topSentinel.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setScrolled(!e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   // Close on route change
@@ -81,9 +85,10 @@ export default function Header() {
 
   return (
     <>
+      <div ref={topSentinel} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 h-[12px] w-px" />
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          scrolled || mobile ? "border-b border-hairline bg-abyss/90 backdrop-blur-md shadow-lg" : "bg-transparent"
+          scrolled || mobile ? "border-b border-hairline bg-abyss/95 shadow-lg" : "bg-transparent"
         }`}
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">

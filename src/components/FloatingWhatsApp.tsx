@@ -20,55 +20,36 @@ export default function FloatingWhatsApp() {
 
   const whatsappUrl = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(prefill)}`;
 
+  // Hide while the footer, the mobile buy bar or another WhatsApp button is on screen.
+  // An IntersectionObserver reports these without measuring layout on every scroll.
   useEffect(() => {
-    const checkVisibility = () => {
-      // 1. Mobile sticky price bar visible on product pages
-      const buybar = document.querySelector("[data-buybar]");
-      if (buybar) {
-        const bStyle = window.getComputedStyle(buybar);
-        const rect = buybar.getBoundingClientRect();
-        if (bStyle.display !== "none" && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight) {
-          setHidden(true);
-          return;
-        }
+    const onScreen = new Set<Element>();
+    const decide = () =>
+      setHidden(
+        Array.from(onScreen).some((el) => {
+          const s = window.getComputedStyle(el);
+          return s.display !== "none" && s.visibility !== "hidden" && s.opacity !== "0";
+        }),
+      );
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) onScreen.add(e.target);
+        else onScreen.delete(e.target);
       }
-
-      // 2. Footer on screen
-      const footer = document.querySelector("footer");
-      if (footer) {
-        const fRect = footer.getBoundingClientRect();
-        if (fRect.top < window.innerHeight && fRect.bottom > 0) {
-          setHidden(true);
-          return;
-        }
-      }
-
-      // 3. Another WhatsApp button on screen (excluding this floating button)
-      const otherWaButtons = document.querySelectorAll('a[href*="wa.me"]:not([data-floating-wa])');
-      for (const btn of Array.from(otherWaButtons)) {
-        const bStyle = window.getComputedStyle(btn);
-        if (bStyle.display === "none" || bStyle.visibility === "hidden" || bStyle.opacity === "0") {
-          continue;
-        }
-        const bRect = btn.getBoundingClientRect();
-        if (bRect.width > 0 && bRect.height > 0 && bRect.top < window.innerHeight && bRect.bottom > 0) {
-          setHidden(true);
-          return;
-        }
-      }
-
-      setHidden(false);
+      decide();
+    });
+    const watch = () => {
+      io.disconnect();
+      onScreen.clear();
+      document
+        .querySelectorAll('[data-buybar], footer, a[href*="wa.me"]:not([data-floating-wa])')
+        .forEach((el) => io.observe(el));
     };
-
-    checkVisibility();
-    window.addEventListener("scroll", checkVisibility, { passive: true });
-    window.addEventListener("resize", checkVisibility, { passive: true });
-    const interval = setInterval(checkVisibility, 200);
-
+    watch();
+    const late = setTimeout(watch, 1500); // pick up anything rendered after hydration
     return () => {
-      window.removeEventListener("scroll", checkVisibility);
-      window.removeEventListener("resize", checkVisibility);
-      clearInterval(interval);
+      clearTimeout(late);
+      io.disconnect();
     };
   }, [path]);
 

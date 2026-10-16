@@ -3,7 +3,6 @@ import Hero from "@/components/home/Hero";
 import {
   Proof,
   ProductLine,
-  TheFullShelf,
   StepByStep,
   FreeLibrary,
   Final,
@@ -34,7 +33,6 @@ export default function Home() {
       <Hero />
       <Proof />
       <ProductLine />
-      <TheFullShelf />
       <StepByStep />
       <FreeLibrary />
       <Final />

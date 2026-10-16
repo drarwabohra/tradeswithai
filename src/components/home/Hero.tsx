@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Pin, span, useTyping } from "@/components/motion";
 import ParticleField from "./ParticleField";
+import Dissolve, { type Box } from "./Dissolve";
+import RobotHead, { ROBOT_FRAMES } from "./RobotHead";
 import { SITE } from "@/lib/site";
 
 const PHRASES = [
@@ -19,9 +21,8 @@ const HEADLINE = ["Build", "your", "shortlist.", "Then", "read", "the", "chart."
 const PATHS = [
   { n: "01", t: "Why it works", s: "Stats & stack", href: "#proof", c: "#41c4e1" },
   { n: "02", t: "Screeners", s: "Watch them roll off", href: "#conveyor", c: "#a8e10d" },
-  { n: "03", t: "All 5 screeners", s: "Prices & demos", href: "#shelf", c: "#41c4e1" },
-  { n: "04", t: "How buying works", s: "Direct on WhatsApp", href: "#setup", c: "#f26419" },
-  { n: "05", t: "Free AI guide", s: "Backtest prompt", href: "#resources", c: "#a8e10d" },
+  { n: "03", t: "How buying works", s: "Direct on WhatsApp", href: "#setup", c: "#f26419" },
+  { n: "04", t: "Free AI guide", s: "Backtest prompt", href: "#resources", c: "#a8e10d" },
 ];
 
 function AppWindow({ text }: { text: string }) {
@@ -94,11 +95,11 @@ function AppWindow({ text }: { text: string }) {
 
 /* Short "stamp" words that land one after another before the headline. Each uses a different motion. */
 const STAMPS = [
-  { word: "Scan.", mode: "scatter", a: 0.2, colour: "text-cyan" },
-  { word: "Filter.", mode: "snap", a: 0.32, colour: "text-ink" },
-  { word: "Shortlist.", mode: "settle", a: 0.44, colour: "text-lime" },
+  { word: "Scan.", mode: "scatter", a: 0.34, colour: "text-cyan" },
+  { word: "Filter.", mode: "snap", a: 0.43, colour: "text-ink" },
+  { word: "Shortlist.", mode: "settle", a: 0.52, colour: "text-lime" },
 ] as const;
-const STAMP_LEN = 0.12; // each stamp's share of the scroll
+const STAMP_LEN = 0.1; // each stamp's share of the scroll
 
 // Deterministic pseudo-random offsets so server and client render the same thing.
 const jitter = (i: number, salt: number) => {
@@ -114,7 +115,7 @@ function Stamp({ word, mode, t, colour }: { word: string; mode: string; t: numbe
   return (
     <p
       aria-hidden="true"
-      className={`pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 whitespace-nowrap text-[clamp(3.2rem,min(8vw,13vh),7.5rem)] font-extrabold leading-none tracking-[-0.035em] ${colour}`}
+      className={`pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 whitespace-nowrap will-change-[transform,opacity,filter] text-[clamp(3.2rem,min(8vw,13vh),7.5rem)] font-extrabold leading-none tracking-[-0.035em] ${colour}`}
       style={{ opacity: 1 - out, transform: `translateY(calc(-50% - ${(out * 40).toFixed(1)}px))`, filter: `blur(${(out * 8).toFixed(1)}px)` }}
     >
       {[...word].map((ch, i) => {
@@ -128,7 +129,7 @@ function Stamp({ word, mode, t, colour }: { word: string; mode: string; t: numbe
           tr = `translateY(${((1 - e) * 60).toFixed(1)}px)`;
         }
         return (
-          <span key={i} className="inline-block" style={{ opacity: e, transform: tr }}>
+          <span key={i} className={`inline-block ${e < 1 ? "will-change-[transform,opacity]" : ""}`} style={{ opacity: e, transform: tr }}>
             {ch}
           </span>
         );
@@ -137,96 +138,164 @@ function Stamp({ word, mode, t, colour }: { word: string; mode: string; t: numbe
   );
 }
 
+// The particles assemble into the front-facing frame; the dive zooms into its eye.
+const ROBOT = { src: ROBOT_FRAMES.src(ROBOT_FRAMES.front), ratio: ROBOT_FRAMES.ratio, eye: ROBOT_FRAMES.eye };
+const WIN_SCALE = 1.04;
+
 export default function Hero() {
   const text = useTyping(PHRASES);
   const copyRef = useRef<HTMLDivElement>(null);
   const winRef = useRef<HTMLDivElement>(null);
-  // Where the window settles: measured so it always sits in the free space right of the copy.
-  const [fit, setFit] = useState({ dx: 0, s: 0.8 });
+  // Window box (where the shards start) and robot box (where they land), in stage pixels.
+  const [layout, setLayout] = useState<{ win: Box; robot: Box } | null>(null);
+  // Phones, tablets and reduced motion get the finished hero without the scroll journey.
+  const [still, setStill] = useState(false);
 
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1024px), (prefers-reduced-motion: reduce)");
     const measure = () => {
+      setStill(mq.matches);
       const copy = copyRef.current;
       const win = winRef.current;
-      if (!copy || !win || window.innerWidth <= 1024) return;
+      if (!copy || !win || mq.matches) return;
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const ww = win.offsetWidth * WIN_SCALE;
+      const wh = win.offsetHeight * WIN_SCALE;
+      // The robot stands on the bottom edge, its eye centred in the free space right of the copy.
+      // It may run past the right edge (the stage clips it) but never back over the copy.
       const copyRight = copy.getBoundingClientRect().right;
       const gap = Math.max(32, vw * 0.03);
-      const availW = vw - copyRight - gap * 2;
-      const availH = vh - 140;
-      const s = Math.max(0.45, Math.min(0.85, availW / win.offsetWidth, availH / win.offsetHeight));
-      const centre = copyRight + gap + availW / 2;
-      setFit({ dx: centre - vw / 2, s });
+      const free = vw - copyRight - gap;
+      const rw = Math.min(vh * 0.84 * ROBOT.ratio, free * 1.15);
+      const rh = rw / ROBOT.ratio;
+      const left = Math.max(copyRight + gap * 0.5, copyRight + gap + free / 2 - ROBOT.eye.x * rw);
+      setLayout({
+        win: { x: (vw - ww) / 2, y: vh * 0.52 - wh / 2, w: ww, h: wh },
+        robot: { x: left, y: vh - rh, w: rw, h: rh },
+      });
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (copyRef.current) ro.observe(copyRef.current);
     window.addEventListener("resize", measure);
+    mq.addEventListener("change", measure);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", measure);
+      mq.removeEventListener("change", measure);
     };
   }, []);
 
   return (
-    <Pin vh={520} className="border-b border-hairline" stageClassName="grid">
-      {(k) => {
+    <Pin vh={600} className="border-b border-hairline" stageClassName="grid">
+      {(pinK) => {
         /* Scroll script (k = 0 → 1):
-           0.00–0.20  window glides from centre stage to the right
-           0.20–0.56  three stamp words land and leave: Scan. → Filter. → Shortlist.
-           0.56–0.84  headline, sub-copy, buttons and section pills settle in
-           0.86–1.00  an orange glow dives out of the window and carries you to the next chapter */
-        const ease = 1 - Math.pow(1 - span(k, 0, 0.2), 3);
-        const start = 1.04;
-        const dive = span(k, 0.86, 1);
-        const winStyle = {
-          transform: `translate(${(ease * fit.dx).toFixed(1)}px, 2vh) scale(${(start + (fit.s - start) * ease + dive * 0.12).toFixed(4)})`,
-          opacity: 1 - dive * 0.85,
-        };
-        const head = span(k, 0.56, 0.66);
-        const ctaT = span(k, 0.64, 0.72);
+           0.00–0.07  the scanner window types at centre stage
+           0.05–0.20  it flashes, blurs and shatters into glowing shards
+           0.07–0.34  shards burst outward and drift into clusters around the right side
+           0.18–0.42  shards fly onto the robot and take its colours; the robot fades in under them
+           0.34–0.62  three stamp words land and leave: Scan. → Filter. → Shortlist.
+           0.62–0.86  headline, sub-copy, buttons and section pills settle in
+           0.87–1.00  the camera dives into the robot's eye and carries you to the next chapter */
+        const k = still ? 0.86 : pinK;
+        const flash = still ? 0 : Math.sin(Math.PI * span(k, 0.05, 0.17));
+        const win = still ? 1 : 1 - span(k, 0.09, 0.2);
+        const burst = span(k, 0.07, 0.34);
+        const assemble = span(k, 0.18, 0.42);
+        const robotIn = span(assemble, 0.45, 0.95);
+        const dive = span(k, 0.87, 1);
+        const zoom = 1 + Math.pow(dive, 3) * 5;
+        const head = span(k, 0.62, 0.7);
+        const ctaT = span(k, 0.68, 0.76);
         const ctaOn = ctaT > 0.6 && dive < 0.5;
-        const chipsOn = k > 0.78 && dive < 0.5;
-        const copyFade = 1 - span(dive, 0, 0.6);
-        const glowO = dive < 0.5 ? dive * 1.7 : (1 - dive) * 1.7;
+        const chipsOn = k > 0.8 && dive < 0.5;
+        const copyFade = 1 - span(dive, 0, 0.4);
+        const glow = span(dive, 0.25, 0.7);
+        const r = layout?.robot;
+        const eye = r ? { x: r.x + r.w * ROBOT.eye.x, y: r.y + r.h * ROBOT.eye.y } : null;
 
         return (
           <>
             <div className="hero-env pointer-events-none" />
-            <div className="absolute inset-0" style={{ opacity: 0.5 + 0.5 * span(k, 0, 0.25) }}>
+            <div className="absolute inset-0 will-change-[opacity]" style={{ opacity: 0.5 + 0.5 * span(k, 0, 0.25) }}>
               <ParticleField boost={dive} />
             </div>
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_56%_45%,transparent_30%,rgb(5_18_25/0.75)_100%)]" />
 
-            {/* App window */}
+            {/* App window: types at centre, then flashes and shatters */}
             <div className="absolute inset-0 grid place-items-center max-[1024px]:static max-[1024px]:order-2 max-[1024px]:px-6 max-[1024px]:pb-16">
-              <div ref={winRef} className="will-change-transform max-[1024px]:!transform-none max-[1024px]:!opacity-100" style={winStyle}>
+              <div
+                ref={winRef}
+                className="relative will-change-transform max-[1024px]:!visible max-[1024px]:!transform-none max-[1024px]:!opacity-100 max-[1024px]:![filter:none]"
+                style={{
+                  transform: `translateY(2vh) scale(${(WIN_SCALE * (0.94 + 0.06 * win)).toFixed(4)})`,
+                  opacity: win,
+                  filter: win < 1 || flash > 0 ? `blur(${((1 - win) * 14).toFixed(1)}px) brightness(${(1 + flash * 0.6).toFixed(3)})` : "none",
+                  visibility: win < 0.01 ? "hidden" : "visible",
+                }}
+              >
                 <AppWindow text={text} />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 rounded-[14px] bg-[radial-gradient(closest-side,rgb(217_247_255/0.85),rgb(65_196_225/0.25)_70%,transparent)] will-change-[opacity] max-[1024px]:hidden"
+                  style={{ opacity: flash * 0.7 }}
+                />
               </div>
             </div>
 
-            {/* Dive glow: blooms from the window and fades into the next chapter */}
+            {/* Shards → robot (desktop) */}
+            <div className="absolute inset-0 max-[1024px]:hidden">
+              {r && (
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute will-change-transform"
+                  style={{
+                    left: r.x,
+                    top: r.y,
+                    width: r.w,
+                    height: r.h,
+                    opacity: robotIn,
+                    transform: `scale(${(0.97 + 0.03 * robotIn) * zoom})`,
+                    transformOrigin: `${ROBOT.eye.x * 100}% ${ROBOT.eye.y * 100}%`,
+                    visibility: robotIn < 0.01 ? "hidden" : "visible",
+                  }}
+                >
+                  <div className="absolute inset-[8%] rounded-full bg-[radial-gradient(closest-side,rgb(65_196_225/0.22),transparent)]" />
+                  {/* Faces forward while it assembles and during the dive; follows the cursor in between. */}
+                  <div className="relative h-full w-full">
+                    <RobotHead lock={robotIn < 0.95 || dive > 0} />
+                  </div>
+                </div>
+              )}
+              {r && <Dissolve burst={burst} assemble={assemble} from={layout?.win ?? null} to={r} src={ROBOT.src} />}
+            </div>
+
+            {/* Dive glow: blooms out of the robot's eye and fades into the next chapter */}
+            {eye && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute z-20 aspect-square w-[22rem] rounded-full will-change-[transform,opacity] max-[1024px]:hidden"
+                style={{
+                  left: eye.x,
+                  top: eye.y,
+                  background:
+                    "radial-gradient(closest-side, rgba(255,214,186,.95), rgba(242,100,25,.7) 32%, rgba(242,100,25,.18) 64%, transparent)",
+                  transform: `translate(-50%, -50%) scale(${(0.2 + glow * 7).toFixed(3)})`,
+                  opacity: glow > 0 ? Math.min(1, glow * 2) : 0,
+                }}
+              />
+            )}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 top-1/2 z-20 aspect-square w-[22rem] rounded-full max-[1024px]:hidden"
-              style={{
-                background:
-                  "radial-gradient(closest-side, rgba(255,214,186,.95), rgba(242,100,25,.7) 32%, rgba(242,100,25,.18) 64%, transparent)",
-                transform: `translate(calc(-50% + ${(fit.dx * (1 - dive * 0.6)).toFixed(1)}px), -50%) scale(${(0.2 + dive * 7).toFixed(3)})`,
-                opacity: glowO,
-              }}
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-20 bg-abyss max-[1024px]:hidden"
+              className="pointer-events-none absolute inset-0 z-20 bg-abyss will-change-[opacity] max-[1024px]:hidden"
               style={{ opacity: span(dive, 0.55, 1) }}
             />
 
             {/* Copy */}
             <div
               className="relative z-10 flex h-full flex-col justify-center px-[clamp(1.5rem,6vw,7rem)] pb-6 pt-20 max-[1024px]:order-1 max-[1024px]:pt-28"
-              style={{ textShadow: "var(--tshadow)", opacity: copyFade }}
+              style={{ textShadow: "var(--tshadow)", opacity: copyFade, willChange: copyFade < 1 ? "opacity" : undefined }}
             >
               <div ref={copyRef} className="relative w-full max-w-[min(38rem,44vw)] max-[1024px]:max-w-[40rem]">
                 {/* Stamp words (desktop only) */}
@@ -236,24 +305,31 @@ export default function Hero() {
                   ))}
                 </div>
 
-                <div style={{ opacity: head }} className="max-[1024px]:!opacity-100">
+                <div style={{ opacity: head, willChange: head > 0 && head < 1 ? "opacity" : undefined }} className="max-[1024px]:!opacity-100">
                   <p className="eyebrow flex items-center gap-2.5 !text-cyan">
                     <span className="live-dot" /> {SITE.name} · Stock & crypto screeners you run yourself
                   </p>
                   <h1 className="mt-4 max-w-[13ch] text-[clamp(2.2rem,min(4.6vw,7.6vh),4.4rem)] font-extrabold leading-[1.02] tracking-[-0.025em] text-ink max-[1024px]:text-[clamp(2.2rem,7vw,3.6rem)]">
-                    {HEADLINE.map((wd, i) => (
-                      <span
-                        key={i}
-                        className={`hero-word ${wd === "shortlist." ? "em" : wd === "chart." ? "!text-lime" : ""}`}
-                        style={{ ["--th" as string]: 0.56 + i * 0.012 }}
-                      >
-                        {wd}{" "}
-                      </span>
-                    ))}
+                    {HEADLINE.map((wd, i) => {
+                      // Words rise in one after another (opacity + transform only: cheap to animate).
+                      const w = span(k, 0.62 + i * 0.012, 0.62 + i * 0.012 + 1 / 6);
+                      return (
+                        <span
+                          key={i}
+                          className={`hero-word ${w > 0 && w < 1 ? "will-change-[transform,opacity]" : ""} ${wd === "shortlist." ? "em" : wd === "chart." ? "!text-lime" : ""}`}
+                          style={{ opacity: w, transform: w < 1 ? `translateY(${((1 - w) * 28).toFixed(1)}px)` : undefined }}
+                        >
+                          {wd}{" "}
+                        </span>
+                      );
+                    })}
                   </h1>
                 </div>
 
-                <div className="max-[1024px]:!opacity-100 max-[1024px]:!transform-none" style={{ opacity: ctaT, transform: `translateY(${((1 - ctaT) * 16).toFixed(1)}px)` }}>
+                <div
+                  className="max-[1024px]:!opacity-100 max-[1024px]:!transform-none"
+                  style={{ opacity: ctaT, transform: `translateY(${((1 - ctaT) * 16).toFixed(1)}px)`, willChange: ctaT > 0 && ctaT < 1 ? "transform, opacity" : undefined }}
+                >
                   <p className="mt-[min(1.25rem,2vh)] max-w-[46ch] text-[clamp(0.95rem,1.15vw,1.1rem)] leading-relaxed text-mist">
                     Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python
                     source code and setup guide included. Flat ₹5,000 one-time payment.
@@ -291,7 +367,7 @@ export default function Hero() {
                 {/* Quick links to sections 01–05: compact pills */}
                 <div className="mt-[min(2rem,3.5vh)] flex flex-wrap gap-2">
                   {PATHS.map((p, i) => {
-                    const t = span(k, 0.72 + i * 0.02, 0.78 + i * 0.02);
+                    const t = span(k, 0.76 + i * 0.02, 0.82 + i * 0.02);
                     return (
                       <a
                         key={p.n}
@@ -303,6 +379,7 @@ export default function Hero() {
                           ["--hc" as string]: p.c,
                           opacity: t,
                           transform: `translateY(${((1 - t) * 18).toFixed(1)}px)`,
+                          willChange: t > 0 && t < 1 ? "transform, opacity" : undefined,
                           textShadow: "none",
                           pointerEvents: chipsOn ? "auto" : "none",
                         }}

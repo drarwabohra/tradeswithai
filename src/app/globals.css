@@ -201,10 +201,21 @@ textarea:focus-visible,
 }
 
 .live-dot {
+  position: relative;
+  display: inline-block;
+  flex: none;
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 9999px;
   background: var(--color-lime);
+}
+/* The pulse is a ring that scales and fades (GPU-only), not an animated shadow (repainted every frame). */
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(168 225 13 / 0.5);
   animation: live-pulse 2s infinite;
 }
 
@@ -263,13 +274,16 @@ footer a {
 /* ───────────────────────── Keyframes ───────────────────────── */
 @keyframes live-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgb(168 225 13 / 0.5);
+    transform: scale(1);
+    opacity: 1;
   }
   70% {
-    box-shadow: 0 0 0 9px rgb(168 225 13 / 0);
+    transform: scale(3.25);
+    opacity: 0;
   }
   100% {
-    box-shadow: 0 0 0 0 rgb(168 225 13 / 0);
+    transform: scale(3.25);
+    opacity: 0;
   }
 }
 @keyframes marquee-slide {
@@ -312,9 +326,7 @@ footer a {
 }
 @keyframes glow-pulse {
   50% {
-    box-shadow:
-      0 0 0 1px var(--color-tangerine),
-      0 20px 80px rgb(242 100 25 / 0.34);
+    opacity: 1;
   }
 }
 
@@ -351,7 +363,7 @@ footer a {
 }
 
 /* ───────────────────── Pinned scroll chapters ─────────────────────
-   <Pin> sets --k (0 → 1) as the section scrolls past. Children read it. */
+   <Pin> tracks progress k (0 → 1) as the section scrolls past and hands it to its children. */
 .pin {
   position: relative;
   height: calc(var(--vh, 300) * 1vh);
@@ -361,10 +373,6 @@ footer a {
   top: 0;
   height: 100svh;
   overflow: hidden;
-}
-/* helper: local progress window [--a, --b] → --t (0..1) */
-.seg {
-  --t: clamp(0, (var(--k, 0) - var(--a, 0)) / (var(--b, 1) - var(--a, 0)), 1);
 }
 
 /* Hero */
@@ -380,10 +388,6 @@ footer a {
 .hero-word {
   display: inline-block;
   white-space: pre;
-  --kc: clamp(0, (var(--k, 0) - var(--th, 0)) * 6, 1);
-  opacity: var(--kc);
-  transform: translateY(calc((1 - var(--kc)) * 28px));
-  filter: blur(calc((1 - var(--kc)) * 6px));
 }
 .hero-word.em {
   color: var(--color-cyan);
@@ -413,7 +417,74 @@ footer a {
 /* Conveyor */
 .belt {
   background: repeating-linear-gradient(90deg, rgb(127 180 199 / 0.18) 0 2px, transparent 2px 38px);
-  background-position-x: calc(var(--k, 0) * -1200px);
+}
+
+/* Assembly gate: blank wireframe cards cross a lime line and come out as the real screener. */
+.assembly-gate {
+  position: absolute;
+  left: 50%;
+  top: -2.25rem;
+  bottom: -0.5rem;
+  z-index: 5;
+  width: 2px;
+  pointer-events: none;
+  background: linear-gradient(transparent, var(--color-lime) 20%, var(--color-lime) 85%, transparent);
+  box-shadow: 0 0 calc(12px + var(--hot, 0) * 22px) var(--color-lime);
+  opacity: calc(0.55 + var(--hot, 0) * 0.45);
+  transition: box-shadow 0.25s ease, opacity 0.25s ease;
+}
+.assembly-gate span {
+  position: absolute;
+  top: 14%;
+  left: 12px;
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  color: var(--color-lime);
+}
+.fcard-wire {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 1px dashed rgb(168 225 13 / 0.45);
+  border-radius: 1rem;
+  background: rgb(5 26 35 / 0.35);
+}
+.fcard-wire .fcard-cover {
+  aspect-ratio: 4 / 3;
+  border: 1px dashed rgb(168 225 13 / 0.35);
+  border-radius: 0.5rem;
+}
+.fcard-wire i {
+  display: block;
+  height: 9px;
+  border-radius: 3px;
+  background: rgb(168 225 13 / 0.18);
+}
+.fcard-wire i:nth-of-type(1) {
+  width: 45%;
+}
+.fcard-wire i:nth-of-type(2) {
+  width: 80%;
+  height: 14px;
+}
+.fcard-real {
+  background: linear-gradient(170deg, #0f3a4e, #0a2a3a);
+  border-color: rgb(168 225 13 / 0.4);
+  box-shadow: 0 20px 50px rgb(0 0 0 / 0.45);
+}
+@media (max-width: 1024px), (prefers-reduced-motion: reduce) {
+  .assembly-gate,
+  .fcard-wire {
+    display: none;
+  }
+  .fcard-real {
+    clip-path: none !important;
+  }
 }
 
 /* Stage list */
@@ -435,7 +506,17 @@ footer a {
   animation: spin 0.8s linear infinite;
 }
 
+/* The orange glow is drawn once on its own layer behind the box; only its opacity pulses. */
 .package-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 1px var(--color-tangerine),
+    0 20px 80px rgb(242 100 25 / 0.34);
+  opacity: 0;
+  will-change: opacity;
   animation: glow-pulse 2.6s ease-in-out infinite;
 }
 
@@ -470,10 +551,6 @@ footer a {
     position: relative;
     height: auto;
     min-height: auto;
-  }
-  .pin,
-  .pin * {
-    --k: 1 !important;
   }
 }
 @media (prefers-reduced-motion: reduce) {

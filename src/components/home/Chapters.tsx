@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { Marquee, Pin, Reveal, span, useScrollProgress, useTyping } from "@/components/motion";
 import { catalog } from "@/lib/catalog";
 import { formatINR } from "@/lib/format";
@@ -34,9 +35,194 @@ function Head({
 }
 
 /* ── 01 · Why it works: pinned orbit ─────────────────────────
-   Rings draw themselves as you scroll, then each screener lights up around a
-   "Your PC" core — every tool runs locally. Stats sit top-right, ticker below. */
-const ORBIT_ANGLES = [205, 270, 335, 30, 150]; // degrees, SVG coords (0 = right, 90 = down)
+   One tilted ring per screener around a "Your PC" core — every tool runs locally.
+   Scroll draws the rings and lights the names; a clock keeps the dots circling and
+   the core breathing while the section is on screen. Stats top-right, ticker below. */
+const RINGS = [
+  { rx: 30, tilt: -12, anchor: -1.45, speed: 0.34, phase: 0.4, c: "#a8e10d" },
+  { rx: 44, tilt: 8, anchor: 2.75, speed: 0.27, phase: 1.4, c: "#c6f04a" },
+  { rx: 58, tilt: -6, anchor: 0.3, speed: 0.21, phase: 2.6, c: "#41c4e1" },
+  { rx: 72, tilt: 9, anchor: 1.25, speed: 0.16, phase: 4.1, c: "#7fd6ea" },
+  { rx: 86, tilt: -4, anchor: -2.35, speed: 0.12, phase: 5.3, c: "#9dbcc8" },
+];
+// SVG units: the field spans x -100..100, y -56..56 around the core.
+function ringPoint(r: (typeof RINGS)[number], angle: number) {
+  const x = r.rx * Math.cos(angle);
+  const y = 0.36 * r.rx * Math.sin(angle);
+  const t = (r.tilt * Math.PI) / 180;
+  return { x: x * Math.cos(t) - y * Math.sin(t), y: x * Math.sin(t) + y * Math.cos(t) };
+}
+
+function Orbit({ k, zoom, opacity }: { k: number; zoom: number; opacity: number }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const kRef = useRef(k);
+  useEffect(() => {
+    kRef.current = k;
+  }, [k]);
+
+  // Time loop: written straight to the SVG so scrolling's React renders don't fight it.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const nodes = root.querySelectorAll<SVGCircleElement>("[data-node]");
+    const spokes = root.querySelectorAll<SVGLineElement>("[data-spoke]");
+    const orb = root.querySelector<SVGGElement>("[data-orb]");
+    const dash = root.querySelector<SVGCircleElement>("[data-dash]");
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let raf = 0;
+    let last = 0;
+    let t = 0; // seconds of orbit travel
+    let visible = false;
+
+    const draw = () => {
+      const kk = kRef.current;
+      RINGS.forEach((r, i) => {
+        const p = ringPoint(r, r.phase + t * r.speed + 2 * kk);
+        nodes[i]?.setAttribute("cx", p.x.toFixed(2));
+        nodes[i]?.setAttribute("cy", p.y.toFixed(2));
+        spokes[i]?.setAttribute("x2", p.x.toFixed(2));
+        spokes[i]?.setAttribute("y2", p.y.toFixed(2));
+      });
+      orb?.setAttribute("transform", `scale(${(1 + 0.045 * Math.sin(t * 1.9)).toFixed(4)})`);
+      dash?.setAttribute("transform", `rotate(${((t * 14) % 360).toFixed(2)})`);
+    };
+    const frame = (now: number) => {
+      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
+      last = now;
+      // Dots speed up as the section ends, like a flywheel letting go.
+      t += dt * (1 + 3 * span(kRef.current, 0.85, 1));
+      draw();
+      raf = visible ? requestAnimationFrame(frame) : 0;
+    };
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible && !raf && !still.matches) {
+        last = 0;
+        raf = requestAnimationFrame(frame);
+      }
+    });
+    draw();
+    io.observe(root);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const screeners = catalog.slice(0, RINGS.length);
+  return (
+    <div
+      ref={rootRef}
+      className="relative aspect-[200/112] w-[min(92vw,135svh)] max-[1024px]:mx-auto max-[1024px]:mt-10 max-[1024px]:w-full max-[1024px]:!transform-none max-[1024px]:!opacity-100 min-[1025px]:absolute min-[1025px]:left-1/2 min-[1025px]:top-[56%]"
+      style={{ transform: `translate(-50%, -50%) scale(${zoom.toFixed(4)})`, opacity }}
+      data-orbit
+    >
+      <svg viewBox="-100 -56 200 112" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
+        <defs>
+          <radialGradient id="orbit-core">
+            <stop offset="0%" stopColor="#a8e10d" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#a8e10d" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {RINGS.map((r, i) => {
+          const drawn = span(k, 0.04 + i * 0.06, 0.36 + i * 0.06);
+          return (
+            <g key={r.rx}>
+              <ellipse
+                rx={r.rx}
+                ry={r.rx * 0.36}
+                transform={`rotate(${r.tilt})`}
+                pathLength={1}
+                fill="none"
+                stroke={r.c}
+                strokeOpacity={0.55}
+                strokeWidth={0.3}
+                strokeDasharray="1"
+                strokeDashoffset={(1 - drawn).toFixed(4)}
+              />
+            </g>
+          );
+        })}
+        <circle r={22 + span(k, 0.2, 0.5) * 6} fill="url(#orbit-core)" />
+      </svg>
+      {/* Moving parts live in their own layer, so the rings and glow above are not repainted every frame. */}
+      <svg viewBox="-100 -56 200 112" className="absolute inset-0 h-full w-full overflow-visible will-change-transform" aria-hidden="true">
+        {RINGS.map((r, i) => (
+          <line
+            key={r.rx}
+            data-spoke
+            x1="0"
+            y1="0"
+            stroke={r.c}
+            strokeWidth="0.2"
+            strokeDasharray="0.8 1.4"
+            style={{ opacity: span(k, 0.04 + i * 0.06, 0.36 + i * 0.06) * 0.5 }}
+          />
+        ))}
+        <g data-orb>
+          <circle r="12" fill="#061e29" stroke="#a8e10d" strokeWidth="0.35" />
+          <circle data-dash r="15" fill="none" stroke="#41c4e1" strokeWidth="0.25" strokeDasharray="1.2 1.6" opacity="0.7" />
+        </g>
+        {RINGS.map((r, i) => {
+          const drawn = span(k, 0.04 + i * 0.06, 0.36 + i * 0.06);
+          const lit = span(k, 0.4 + i * 0.07, 0.48 + i * 0.07);
+          return (
+            <circle
+              key={r.rx}
+              data-node
+              r={1.5 + lit * 0.5}
+              fill={lit > 0.5 ? r.c : "#0a2b3a"}
+              stroke={r.c}
+              strokeWidth={lit > 0.5 ? 1.4 : 0.35}
+              strokeOpacity={lit > 0.5 ? 0.4 : 1}
+              style={{ opacity: drawn }}
+            />
+          );
+        })}
+      </svg>
+
+      {/* Core label: inside the core, or as a caption below on phones where the core is too small. */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center max-sm:hidden">
+        <p className="font-mono text-xs font-bold tracking-[0.18em] text-lime">YOUR PC</p>
+        <p className="font-mono text-xs text-mist">runs locally</p>
+      </div>
+      <p className="absolute left-1/2 top-full mt-1 w-max -translate-x-1/2 font-mono text-xs tracking-[0.14em] text-mist sm:hidden">
+        <b className="text-lime">YOUR PC</b> · every screener runs locally
+      </p>
+
+      {/* Screener labels (desktop): each sits at a fixed spot on its own ring. */}
+      {screeners.map((p, i) => {
+        const r = RINGS[i];
+        const lit = span(k, 0.4 + i * 0.07, 0.48 + i * 0.07);
+        const a = ringPoint(r, r.anchor);
+        const left = a.x < 0;
+        return (
+          <Link
+            key={p.id}
+            href={`/products/${p.id}`}
+            tabIndex={lit > 0.5 ? 0 : -1}
+            className="card card-hover absolute w-max max-w-[15rem] !rounded-xl !bg-[rgb(7_33_45/0.92)] px-3.5 py-2 max-[1024px]:hidden"
+            style={{
+              // Rounded so server and browser trig agree to the digit (no hydration mismatch).
+              left: `${((a.x + 100) / 2).toFixed(2)}%`,
+              top: `${(((a.y + 56) / 112) * 100).toFixed(2)}%`,
+              transform: `translate(${left ? "calc(-100% - 0.75rem)" : "0.75rem"}, -50%) translateX(${((1 - lit) * (left ? -16 : 16)).toFixed(1)}px)`,
+              opacity: lit,
+              pointerEvents: lit > 0.5 ? "auto" : "none",
+              ["--hc" as string]: r.c,
+            }}
+          >
+            <span className="flex items-center gap-2 font-mono text-xs tracking-[0.14em]" style={{ color: r.c }}>
+              <i className="h-1.5 w-1.5 rounded-full" style={{ background: r.c, boxShadow: `0 0 8px ${r.c}` }} />
+              0{i + 1} · {formatINR(p.price)}
+            </span>
+            <span className="block text-sm font-extrabold text-ink">{p.name}</span>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
 const STATS = [
   ["5", "Screeners"],
   ["₹5,000", "Flat one-time price"],
@@ -57,11 +243,6 @@ const TICKER = [
 ];
 
 export function Proof() {
-  const nodes = catalog.slice(0, ORBIT_ANGLES.length).map((p, i) => {
-    const a = (ORBIT_ANGLES[i] * Math.PI) / 180;
-    return { p, x: 50 + 46 * Math.cos(a), y: 50 + 46 * Math.sin(a) };
-  });
-
   return (
     <section id="proof" className="scroll-mt-20">
       <Pin vh={320} stageClassName="bg-[radial-gradient(circle_at_50%_60%,#0b3446_0%,var(--color-abyss)_62%)]">
@@ -117,78 +298,7 @@ export function Proof() {
                 })}
               </ul>
 
-              {/* Orbit */}
-              <div
-                className="relative aspect-square w-[min(70vw,64svh)] max-[1024px]:mx-auto max-[1024px]:mt-10 max-[1024px]:w-[min(100%,30rem)] max-[1024px]:!transform-none max-[1024px]:!opacity-100 min-[1025px]:absolute min-[1025px]:left-1/2 min-[1025px]:top-[56%]"
-                style={{ transform: `translate(-50%, -50%) scale(${zoom.toFixed(4)})`, opacity: orbitO }}
-                data-orbit
-              >
-                <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
-                  <defs>
-                    <radialGradient id="orbit-core">
-                      <stop offset="0%" stopColor="#a8e10d" stopOpacity="0.55" />
-                      <stop offset="100%" stopColor="#a8e10d" stopOpacity="0" />
-                    </radialGradient>
-                  </defs>
-                  {[46, 33, 20].map((r, i) => (
-                    <circle
-                      key={r}
-                      cx="50"
-                      cy="50"
-                      r={r}
-                      pathLength={1}
-                      fill="none"
-                      stroke={i === 0 ? "#41c4e1" : i === 1 ? "rgba(65,196,225,.45)" : "rgba(168,225,13,.5)"}
-                      strokeWidth={i === 0 ? 0.35 : 0.25}
-                      strokeDasharray="1"
-                      strokeDashoffset={(1 - span(k, 0.04 + i * 0.08, 0.36 + i * 0.08)).toFixed(4)}
-                      transform={`rotate(${-90 + k * 40 * (i % 2 ? -1 : 1)} 50 50)`}
-                    />
-                  ))}
-                  {nodes.map((n, i) => {
-                    const lit = span(k, 0.4 + i * 0.07, 0.48 + i * 0.07);
-                    return (
-                      <g key={n.p.id} style={{ opacity: 0.15 + lit * 0.85 }}>
-                        <line x1="50" y1="50" x2={n.x} y2={n.y} stroke="#41c4e1" strokeWidth="0.2" strokeDasharray="0.8 1.4" />
-                        <circle cx={n.x} cy={n.y} r={1.1 + lit * 0.5} fill={lit > 0.5 ? "#a8e10d" : "#0a2b3a"} stroke="#a8e10d" strokeWidth="0.3" />
-                      </g>
-                    );
-                  })}
-                  <circle cx="50" cy="50" r={9 + span(k, 0.2, 0.5) * 3} fill="url(#orbit-core)" />
-                  <circle cx="50" cy="50" r="5.5" fill="#061e29" stroke="#a8e10d" strokeWidth="0.35" />
-                </svg>
-
-                {/* Core label */}
-                <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                  <p className="font-mono text-xs font-bold tracking-[0.18em] text-lime">YOUR PC</p>
-                  <p className="font-mono text-xs text-mist">runs locally</p>
-                </div>
-
-                {/* Screener labels (desktop) */}
-                {nodes.map((n, i) => {
-                  const lit = span(k, 0.4 + i * 0.07, 0.48 + i * 0.07);
-                  const left = n.x < 50;
-                  return (
-                    <Link
-                      key={n.p.id}
-                      href={`/products/${n.p.id}`}
-                      tabIndex={lit > 0.5 ? 0 : -1}
-                      className="card card-hover absolute w-max max-w-[15rem] !rounded-xl px-3.5 py-2 backdrop-blur-md max-[1024px]:hidden"
-                      style={{
-                        left: `${n.x}%`,
-                        top: `${n.y}%`,
-                        transform: `translate(${left ? "calc(-100% - 1rem)" : "1rem"}, -50%) translateX(${((1 - lit) * (left ? -16 : 16)).toFixed(1)}px)`,
-                        opacity: lit,
-                        pointerEvents: lit > 0.5 ? "auto" : "none",
-                        ["--hc" as string]: "#a8e10d",
-                      }}
-                    >
-                      <span className="block font-mono text-xs tracking-[0.14em] text-lime">0{i + 1} · {formatINR(n.p.price)}</span>
-                      <span className="block text-sm font-extrabold text-ink">{n.p.name}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+              <Orbit k={k} zoom={zoom} opacity={orbitO} />
 
               {/* Screener list (tablet & mobile) */}
               <ul className="mt-8 grid gap-2 sm:grid-cols-2 min-[1025px]:hidden">
@@ -215,9 +325,97 @@ export function Proof() {
 }
 
 /* ── 02 · Screeners: Pinned Conveyor Line ─────────────────── */
-export function ProductLine() {
-  const line = catalog;
+type Measured = { gate: number; width: number; cards: [left: number, width: number][] };
 
+function Conveyor({ k }: { k: number }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [m, setM] = useState<Measured | null>(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const measure = () =>
+      setM({
+        gate: (track.parentElement?.clientWidth ?? window.innerWidth) / 2,
+        width: track.offsetWidth,
+        cards: Array.from(track.children, (c) => [(c as HTMLElement).offsetLeft, (c as HTMLElement).offsetWidth]),
+      });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  // Track glides from just off the right edge until the last card has cleared the gate.
+  const e = span(k, 0.04, 0.96);
+  const start = m ? m.gate * 1.8 : 0;
+  const x = m ? start + (m.gate - m.width - 60 - start) * e : 0;
+  // Share of each card (0..1, from its left edge) that has passed the gate and become real.
+  const passed = catalog.map((_, i) => {
+    if (!m) return k >= 1 ? 1 : 0;
+    const [left, w] = m.cards[i] ?? [0, 1];
+    return Math.min(1, Math.max(0, (m.gate - (x + left)) / w));
+  });
+  const hot = passed.some((p) => p > 0 && p < 1);
+
+  return (
+    <div className="relative mt-10 max-[1024px]:overflow-x-auto">
+      <div className="assembly-gate" style={{ ["--hot" as string]: hot ? 1 : 0 }} aria-hidden="true">
+        <span>ASSEMBLY</span>
+      </div>
+      <div
+        ref={trackRef}
+        className="flex w-max gap-5 px-[max(1.5rem,6vw)] will-change-transform max-[1024px]:!transform-none"
+        style={{ transform: m ? `translateX(${x.toFixed(1)}px)` : "translateX(90vw)" }}
+      >
+        {catalog.map((p, i) => {
+          const shown = passed[i];
+          // Clip away the part still behind the gate (the -30px edges keep the shadow and hover lift).
+          const clip = shown >= 1 ? "none" : shown <= 0 ? "inset(0 100% 0 0)" : `inset(-30px ${((1 - shown) * 100).toFixed(2)}% -30px -30px)`;
+          return (
+            <div key={p.id} className="relative w-72 shrink-0 sm:w-80">
+              {/* Blank wireframe: what the card looks like before it reaches the gate. */}
+              <div className="fcard-wire" aria-hidden="true">
+                <div className="fcard-cover" />
+                <i />
+                <i />
+              </div>
+              <Link
+                href={`/products/${p.id}`}
+                tabIndex={shown > 0 ? 0 : -1}
+                onFocus={(ev) => ev.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })}
+                className="fcard-real card card-hover group relative block min-h-[44px] p-5 will-change-transform"
+                style={{ clipPath: clip, ["--hc" as string]: "#a8e10d" }}
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-hairline bg-surface">
+                  <Image
+                    src={p.thumbnail}
+                    alt={p.name}
+                    fill
+                    sizes="(max-width: 768px) 90vw, 320px"
+                    className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <p className="mt-4 font-mono text-xs uppercase tracking-[0.12em] text-lime">Source code · {formatINR(p.price)}</p>
+                <p className="mt-1 text-base font-bold leading-snug text-ink">{p.name}</p>
+              </Link>
+            </div>
+          );
+        })}
+      </div>
+      <div
+        className="belt mt-6 h-3.5 border-y border-hairline"
+        style={m ? { backgroundPositionX: `${x.toFixed(1)}px` } : undefined}
+      />
+    </div>
+  );
+}
+
+export function ProductLine() {
   return (
     <div id="conveyor" className="scroll-mt-20">
       <section className="mx-auto max-w-6xl px-6 pb-10 pt-28">
@@ -281,9 +479,9 @@ export function ProductLine() {
         </div>
       </section>
 
-      {/* Pinned horizontal conveyor belt */}
+      {/* Pinned conveyor: blank cards cross the assembly gate and come out as the real screener. */}
       <Pin
-        vh={260}
+        vh={320}
         stageClassName="bg-[radial-gradient(ellipse_80%_60%_at_50%_70%,#0d3a2c_0%,var(--color-abyss)_68%)]"
       >
         {(k) => (
@@ -297,41 +495,7 @@ export function ProductLine() {
               </h3>
             </div>
 
-            <div className="relative mt-10 max-[1024px]:overflow-x-auto">
-              <div
-                className="flex gap-5 px-[max(1.5rem,6vw)] will-change-transform max-[1024px]:!transform-none"
-                style={{ transform: `translateX(calc(${(1 - k).toFixed(4)} * 45vw - ${k.toFixed(4)} * 75vw))` }}
-              >
-                {line.map((p, i) => {
-                  const lit = k > 0.08 + i * 0.12;
-                  return (
-                    <Link
-                      key={p.id}
-                      href={`/products/${p.id}`}
-                      onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })}
-                      className={`card card-hover group w-72 sm:w-80 shrink-0 p-5 transition-[opacity,border-color,box-shadow] duration-500 min-h-[44px] ${
-                        lit ? "border-cyan/40 opacity-100 shadow-xl" : "opacity-70"
-                      }`}
-                      style={{ ["--hc" as string]: "#41c4e1" }}
-                    >
-                      {/* Conveyor card shows ONLY image and name */}
-                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-hairline bg-surface">
-                        <Image
-                          src={p.thumbnail}
-                          alt={p.name}
-                          fill
-                          sizes="(max-width: 768px) 90vw, 320px"
-                          priority={false}
-                          className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
-                        />
-                      </div>
-                      <p className="mt-4 text-base font-bold leading-snug text-ink">{p.name}</p>
-                    </Link>
-                  );
-                })}
-              </div>
-              <div className="belt mt-6 h-3.5 border-y border-hairline" />
-            </div>
+            <Conveyor k={k} />
 
             <div className="mt-8 px-[max(1.5rem,6vw)] flex flex-wrap gap-4 items-center">
               <Link href="/products" className="btn-primary min-h-[44px]">
@@ -353,80 +517,7 @@ export function ProductLine() {
   );
 }
 
-/* ── 03 · All 5 Screeners: Store Shelf ───────────────────── */
-export function TheFullShelf() {
-  return (
-    <section id="shelf" className="mx-auto max-w-6xl px-6 pb-28 pt-20 border-t border-hairline scroll-mt-20">
-      <Reveal>
-        <Head
-          n="03"
-          label="ALL 5 SCREENERS"
-          c="#41c4e1"
-          title={
-            <>
-              Explore every <span className="text-cyan">screener build.</span>
-            </>
-          }
-          sub="Run each tool on your own machine. Full Python source code, clean installation guide, and WhatsApp support included."
-        />
-      </Reveal>
-
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {catalog.map((product, i) => (
-          <Reveal key={product.id} delay={i * 80}>
-            <article
-              className="card card-hover group flex h-full flex-col overflow-hidden p-5"
-              style={{ ["--hc" as string]: "#41c4e1" }}
-            >
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-hairline bg-surface">
-                <Image
-                  src={product.thumbnail}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 90vw, 400px"
-                  priority={false}
-                  className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="mt-5 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="chip !py-0.5 !text-xs text-lime border-lime/30 min-h-[28px]">
-                      PYTHON 3.10+
-                    </span>
-                    <span className="font-mono text-base font-bold text-lime">{formatINR(product.price)}</span>
-                  </div>
-                  <h3 className="mt-3 text-lg font-bold text-ink leading-snug">{product.name}</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-mist line-clamp-3">{product.shortDescription}</p>
-                </div>
-
-                <div className="mt-6 flex items-center justify-between border-t border-hairline pt-4 gap-3">
-                  <Link
-                    href={`/products/${product.id}`}
-                    className="text-xs font-semibold text-cyan hover:underline min-h-[44px] flex items-center"
-                  >
-                    View Demo & Details →
-                  </Link>
-                  <a
-                    href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(`Hi, I want to acquire ${product.name}.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary !py-1.5 !px-3.5 !text-xs min-h-[44px]"
-                  >
-                    Inquire
-                  </a>
-                </div>
-              </div>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ── 04 · How Buying Works: Pinned Steps & Checklist ─────── */
+/* ── 03 · How Buying Works: Pinned Steps & Checklist ─────── */
 const SETUP_STAGES = [
   "Message us on WhatsApp",
   "Confirm your operating system & dependencies",
@@ -441,7 +532,7 @@ export function StepByStep() {
       <div className="mx-auto max-w-6xl px-6 pb-10 pt-28">
         <Reveal>
           <Head
-            n="04"
+            n="03"
             label="HOW BUYING WORKS"
             c="#f26419"
             title={
@@ -484,9 +575,11 @@ export function StepByStep() {
               </div>
 
               {/* Progress Card - full width below 1024px */}
+              <div className="relative w-full">
+              {done && <div className="package-glow" aria-hidden="true" />}
               <div
                 className={`relative w-full h-[25rem] min-h-[25rem] overflow-hidden rounded-xl border border-hairline-strong bg-[#061e29] transition-shadow duration-500 ${
-                  done ? "package-glow shadow-2xl" : ""
+                  done ? "shadow-2xl" : ""
                 }`}
               >
                 <div className="flex items-center gap-2 border-b border-hairline px-4 py-2.5">
@@ -519,8 +612,8 @@ export function StepByStep() {
                         </div>
                         <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-deep">
                           <div
-                            className="h-full rounded-full"
-                            style={{ width: `${(v as number) * 100 * fill}%`, background: c as string }}
+                            className="h-full origin-left rounded-full will-change-transform"
+                            style={{ width: `${(v as number) * 100}%`, transform: `scaleX(${fill.toFixed(4)})`, background: c as string }}
                           />
                         </div>
                       </div>
@@ -534,6 +627,7 @@ export function StepByStep() {
                     ✓ Package confirmed. Source code zip, installation script, and API configuration notes ready for dispatch.
                   </p>
                 </div>
+              </div>
               </div>
 
               {/* Action Column with How To Pay line */}
@@ -666,7 +760,7 @@ export function FreeLibrary() {
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <Head
-            n="05"
+            n="04"
             label="FREE AI GUIDE"
             title={
               <>
@@ -681,8 +775,8 @@ export function FreeLibrary() {
           {/* trunk */}
           <div className="absolute bottom-0 left-2 top-0 w-0.5 bg-hairline max-[760px]:left-1.5">
             <i
-              className="absolute left-0 top-0 block w-full bg-cyan shadow-[0_0_10px_#41c4e1,0_0_26px_#41c4e1]"
-              style={{ height: `${(p * 100).toFixed(2)}%` }}
+              className="absolute inset-0 block origin-top bg-cyan shadow-[0_0_10px_#41c4e1,0_0_26px_#41c4e1] will-change-transform"
+              style={{ transform: `scaleY(${p.toFixed(4)})` }}
             />
           </div>
 
@@ -734,17 +828,24 @@ export function Final() {
       <div className="hero-env pointer-events-none opacity-60" />
       <div ref={lineRef} className="relative mx-auto h-[24vh] w-10" aria-hidden="true">
         <svg viewBox="0 0 40 100" preserveAspectRatio="none" className="h-full w-full overflow-visible">
-          <path
-            d="M20 0 C20 40, 8 55, 20 75 S20 95, 20 100"
-            fill="none"
-            stroke="#41c4e1"
-            strokeWidth="2.5"
-            vectorEffect="non-scaling-stroke"
-            pathLength={1}
-            strokeDasharray="1"
-            strokeDashoffset={(1 - draw).toFixed(4)}
-            style={{ filter: "drop-shadow(0 0 6px #41c4e1)" }}
-          />
+          {[
+            { w: 10, o: 0.18 },
+            { w: 2.5, o: 1 },
+          ].map(({ w, o }) => (
+            <path
+              key={w}
+              d="M20 0 C20 40, 8 55, 20 75 S20 95, 20 100"
+              fill="none"
+              stroke="#41c4e1"
+              strokeOpacity={o}
+              strokeWidth={w}
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              pathLength={1}
+              strokeDasharray="1"
+              strokeDashoffset={(1 - draw).toFixed(4)}
+            />
+          ))}
         </svg>
         <span
           className="absolute bottom-0 left-1/2 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-cyan shadow-[0_0_14px_#41c4e1]"
@@ -761,7 +862,8 @@ export function Final() {
         >
           I want to run
           <br />
-          <span className="text-lime">{text || "Stock Breakout Screener"}</span>
+          {/* Zero-width space keeps the line's height while the text is empty between names. */}
+          <span className="text-lime">{text || "​"}</span>
           <span className="cw-caret !h-[0.9em] !w-[4px] !bg-lime" />
         </h2>
         <p className="mx-auto mt-6 max-w-lg text-base text-mist leading-relaxed">

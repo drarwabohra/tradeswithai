@@ -1,37 +1,82 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 
-/** Shared rAF scroll loop so every pinned section updates in one pass. */
-const listeners = new Set<() => void>();
+/* Shared scroll engine: one rAF pass per frame for every scroll-driven section.
+   Each section's page position is measured once and cached, and only re-measured when
+   something changes size. Per frame, progress comes from window.scrollY alone, so
+   scrolling never forces the browser to recalculate layout. */
+type Box = { top: number; bottom: number; height: number };
+type Entry = { el: HTMLElement; docTop: number; height: number; fn: (r: Box, vh: number) => void };
+const entries = new Set<Entry>();
 let ticking = false;
-function onScroll() {
-  if (ticking) return;
-  ticking = true;
-  requestAnimationFrame(() => {
-    ticking = false;
-    listeners.forEach((fn) => fn());
+let dirty = true;
+let ro: ResizeObserver | null = null;
+// Scroll position, read in the scroll event (before any animation writes to the page this
+// frame) so reading it never makes the browser stop and redo layout.
+let scrollTop = 0;
+
+function frame() {
+  ticking = false;
+  if (dirty) {
+    // All reads in one batch (a single layout), before any section writes anything.
+    dirty = false;
+    scrollTop = window.scrollY;
+    entries.forEach((e) => {
+      const r = e.el.getBoundingClientRect();
+      e.docTop = r.top + scrollTop;
+      e.height = r.height;
+    });
+  }
+  const sy = scrollTop;
+  const vh = window.innerHeight;
+  entries.forEach((e) => {
+    const top = e.docTop - sy;
+    e.fn({ top, bottom: top + e.height, height: e.height }, vh);
   });
 }
-function subscribe(fn: () => void) {
-  if (listeners.size === 0) {
+function schedule() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(frame);
+}
+function onScroll() {
+  scrollTop = window.scrollY;
+  schedule();
+}
+function remeasure() {
+  dirty = true;
+  schedule();
+}
+function subscribe(el: HTMLElement, fn: (r: Box, vh: number) => void) {
+  if (entries.size === 0) {
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("load", remeasure);
+    ro = new ResizeObserver(remeasure);
+    ro.observe(document.body);
   }
-  listeners.add(fn);
-  fn();
+  const entry: Entry = { el, docTop: 0, height: 0, fn };
+  entries.add(entry);
+  ro?.observe(el);
+  remeasure();
   return () => {
-    listeners.delete(fn);
-    if (listeners.size === 0) {
+    entries.delete(entry);
+    ro?.unobserve(el);
+    if (entries.size === 0) {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", remeasure);
+      window.removeEventListener("load", remeasure);
+      ro?.disconnect();
+      ro = null;
     }
   };
 }
 
 /**
  * A tall section whose inner stage sticks to the viewport while you scroll.
- * Writes --k (0 → 1) on itself and reports progress to children via render prop.
+ * Reports progress k (0 → 1) to children via render prop, rendered in the same frame.
  */
 export function Pin({
   vh = 300,
@@ -55,18 +100,14 @@ export function Pin({
     const el = ref.current;
     if (!el) return;
     const static_ = window.matchMedia("(max-width: 1024px), (prefers-reduced-motion: reduce)");
-    return subscribe(() => {
-      if (static_.matches) {
-        el.style.setProperty("--k", "1");
-        setK(1);
-        return;
-      }
-      const r = el.getBoundingClientRect();
-      const span = r.height - window.innerHeight;
-      const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 1;
-      el.style.setProperty("--k", p.toFixed(4));
-      el.classList.toggle("is-on", r.top < window.innerHeight && r.bottom > 0);
-      setK((prev) => (Math.abs(prev - p) > 0.004 ? p : prev));
+    let last = -1;
+    return subscribe(el, (r, vh) => {
+      const span = r.height - vh;
+      const p = static_.matches ? 1 : span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 1;
+      // Only re-render when progress really moved; render inside this frame so motion never lags a frame.
+      if (Math.abs(p - last) < 0.0015 && !(p !== last && (p === 0 || p === 1))) return;
+      last = p;
+      flushSync(() => setK(p));
     });
   }, []);
 
@@ -209,7 +250,9 @@ export function Marquee({ items }: { items: string[] }) {
 export function useTyping(phrases: string[], active = true) {
   const [text, setText] = useState("");
   const phrasesRef = useRef(phrases);
-  phrasesRef.current = phrases;
+  useEffect(() => {
+    phrasesRef.current = phrases;
+  });
 
   useEffect(() => {
     if (!active || phrasesRef.current.length === 0) return;
@@ -247,21 +290,23 @@ export function useTyping(phrases: string[], active = true) {
  * Scroll progress for a section that is NOT pinned.
  * `measure` maps the element's rect + viewport height to 0..1. Returns 1 under reduced motion.
  */
-export function useScrollProgress<T extends HTMLElement>(measure: (r: DOMRect, vh: number) => number) {
+export function useScrollProgress<T extends HTMLElement>(measure: (r: Box, vh: number) => number) {
   const ref = useRef<T>(null);
   const [p, setP] = useState(0);
   const fn = useRef(measure);
-  fn.current = measure;
+  useEffect(() => {
+    fn.current = measure;
+  });
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setP(1);
-      return;
-    }
-    return subscribe(() => {
-      const v = Math.min(1, Math.max(0, fn.current(el.getBoundingClientRect(), window.innerHeight)));
-      setP((prev) => (Math.abs(prev - v) > 0.003 ? v : prev));
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let last = -1;
+    return subscribe(el, (r, vh) => {
+      const v = still ? 1 : Math.min(1, Math.max(0, fn.current(r, vh)));
+      if (Math.abs(v - last) < 0.003 && !(v !== last && (v === 0 || v === 1))) return;
+      last = v;
+      flushSync(() => setP(v));
     });
   }, []);
   return [ref, p] as const;
