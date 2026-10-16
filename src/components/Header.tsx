@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { SITE } from "@/lib/site";
 import { catalog } from "@/lib/catalog";
 import { BrandMark } from "./BrandMark";
+import Image from "next/image";
 
 export function Logo() {
   return (
@@ -109,9 +110,13 @@ export default function Header() {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary !py-2 !px-4 !text-xs !font-bold min-h-[44px]"
+              className="wa-glow group"
+              aria-label="Chat on WhatsApp"
             >
-              Inquire on WhatsApp
+              <Image src="/brand/whatsapp.png" alt="" width={36} height={36} priority className="relative h-9 w-9" />
+              <span className="pointer-events-none absolute right-0 top-full mt-2.5 whitespace-nowrap rounded-md border border-hairline bg-panel px-3 py-1.5 font-mono text-xs font-semibold text-ink opacity-0 shadow-2xl transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+                Chat on WhatsApp
+              </span>
             </a>
           </div>
 

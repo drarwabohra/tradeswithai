@@ -542,6 +542,49 @@ footer a {
   box-shadow: 0 0 35px rgba(37, 211, 102, 0.7);
 }
 
+/* Header WhatsApp logo: a fixed soft glow behind it plus two rings that scale and fade (GPU-only). */
+.wa-glow {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(37, 211, 102, 0.32) 0%, rgba(37, 211, 102, 0.12) 55%, transparent 72%);
+  box-shadow: 0 0 26px rgba(37, 211, 102, 0.35);
+  transition: transform 0.2s ease;
+}
+.wa-glow img {
+  filter: drop-shadow(0 0 6px rgba(37, 211, 102, 0.75));
+}
+.wa-glow:hover,
+.wa-glow:focus-visible {
+  transform: scale(1.08);
+}
+.wa-glow::before,
+.wa-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid rgba(37, 211, 102, 0.7);
+  pointer-events: none;
+  animation: wa-ring 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+.wa-glow::after {
+  animation-delay: 1.2s;
+}
+@keyframes wa-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+
 /* No pinning on tablets, mobile, or reduced motion */
 @media (max-width: 1024px), (prefers-reduced-motion: reduce) {
   .pin {
@@ -563,7 +606,9 @@ footer a {
   .hero-env,
   .cw-caret,
   .live-dot,
-  .package-glow {
+  .package-glow,
+  .wa-glow::before,
+  .wa-glow::after {
     animation: none;
   }
 }
