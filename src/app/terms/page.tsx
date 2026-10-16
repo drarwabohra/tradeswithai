@@ -4,17 +4,17 @@ import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Terms and conditions for purchasing and using TradesWithAI software and screeners.",
+  description: "Terms and conditions for purchasing and using ChartNeural software and screeners.",
   alternates: { canonical: "/terms" },
   openGraph: {
-    title: "Terms of Service · TradesWithAI",
-    description: "Terms and conditions for purchasing and using TradesWithAI software and screeners.",
+    title: "Terms of Service · ChartNeural",
+    description: "Terms and conditions for purchasing and using ChartNeural software and screeners.",
     url: "/terms",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Terms of Service · TradesWithAI",
-    description: "Terms and conditions for purchasing and using TradesWithAI software and screeners.",
+    title: "Terms of Service · ChartNeural",
+    description: "Terms and conditions for purchasing and using ChartNeural software and screeners.",
   },
 };
 
@@ -66,7 +66,7 @@ export default function TermsPage() {
             <li>
               WhatsApp:{" "}
               <a
-                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about TradesWithAI screeners.")}`}
+                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about ChartNeural screeners.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan underline min-h-[44px] inline-flex items-center"

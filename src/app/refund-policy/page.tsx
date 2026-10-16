@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   description: "Our refund policy regarding digital software downloads and source code delivery.",
   alternates: { canonical: "/refund-policy" },
   openGraph: {
-    title: "Cancellation & Refund Policy · TradesWithAI",
+    title: "Cancellation & Refund Policy · ChartNeural",
     description: "Our refund policy regarding digital software downloads and source code delivery.",
     url: "/refund-policy",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cancellation & Refund Policy · TradesWithAI",
+    title: "Cancellation & Refund Policy · ChartNeural",
     description: "Our refund policy regarding digital software downloads and source code delivery.",
   },
 };
@@ -85,7 +85,7 @@ export default function RefundPage() {
             <li>
               WhatsApp:{" "}
               <a
-                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about TradesWithAI screeners.")}`}
+                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about ChartNeural screeners.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan underline min-h-[44px] inline-flex items-center"

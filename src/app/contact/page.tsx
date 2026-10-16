@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   description: "Have questions about a screener, Python dependencies, or custom scanning logic? Get in touch directly.",
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: "Contact & Setup Verification · TradesWithAI",
+    title: "Contact & Setup Verification · ChartNeural",
     description: "Have questions about a screener, Python dependencies, or custom scanning logic? Get in touch directly.",
     url: "/contact",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact & Setup Verification · TradesWithAI",
+    title: "Contact & Setup Verification · ChartNeural",
     description: "Have questions about a screener, Python dependencies, or custom scanning logic? Get in touch directly.",
   },
 };

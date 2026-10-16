@@ -11,14 +11,14 @@ export const metadata: Metadata = {
     "Explore our full catalog of Python stock and crypto screeners. Inspect features, demos, and acquire full source code with a flat one-time payment.",
   alternates: { canonical: "/products" },
   openGraph: {
-    title: "Compare Screeners · TradesWithAI",
+    title: "Compare Screeners · ChartNeural",
     description:
       "Explore our full catalog of Python stock and crypto screeners. Inspect features, demos, and acquire full source code with a flat one-time payment.",
     url: "/products",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Compare Screeners · TradesWithAI",
+    title: "Compare Screeners · ChartNeural",
     description:
       "Explore our full catalog of Python stock and crypto screeners. Inspect features, demos, and acquire full source code with a flat one-time payment.",
   },

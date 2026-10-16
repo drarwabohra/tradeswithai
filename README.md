@@ -1,4 +1,4 @@
-# TradesWithAI
+# ChartNeural
 
 Next.js App Router storefront for downloadable stock and crypto screeners.
 

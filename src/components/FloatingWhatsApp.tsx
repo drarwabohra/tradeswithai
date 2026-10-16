@@ -16,7 +16,7 @@ export default function FloatingWhatsApp() {
 
   const prefill = currentProduct
     ? `Hi, I want to buy the ${currentProduct.name}. My OS is: `
-    : "Hi, I have a question about TradesWithAI screeners.";
+    : "Hi, I have a question about ChartNeural screeners.";
 
   const whatsappUrl = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(prefill)}`;
 

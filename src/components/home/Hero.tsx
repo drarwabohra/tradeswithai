@@ -39,7 +39,7 @@ function AppWindow({ text }: { text: string }) {
       <div className="grid min-h-[17.5rem] grid-cols-[11.5rem_1fr] max-sm:grid-cols-1">
         <aside className="border-r border-hairline p-4 text-xs max-sm:hidden">
           <p className="mb-4 flex items-center gap-2 font-bold text-ink">
-            <span className="h-4 w-4 rounded bg-gradient-to-br from-cyan to-lime" /> TWA Scanner
+            <span className="h-4 w-4 rounded bg-gradient-to-br from-cyan to-lime" /> ChartNeural Scanner
           </p>
           {["Live Watchlist", "Volume Breakout", "Pattern Engine", "Telegram Bot"].map((x, i) => (
             <p key={x} className={`mb-1 rounded-md px-2 py-1.5 text-xs ${i === 1 ? "bg-cyan/15 font-semibold text-cyan" : "text-mist"}`}>
@@ -58,7 +58,7 @@ function AppWindow({ text }: { text: string }) {
           <div>
             <div className="flex items-center gap-2">
               <span className="inline-block h-5 w-5 rounded-md bg-gradient-to-br from-cyan to-lime shadow-[0_0_18px_-2px_rgb(65_196_225/0.7)]" />
-              <span className="font-mono text-xs font-semibold text-lime">TRADES WITH AI STUDIO</span>
+              <span className="font-mono text-xs font-semibold text-lime">CHARTNEURAL STUDIO</span>
             </div>
             <p className="mb-4 mt-3 text-lg font-bold">
               Run market scans on your machine. <span className="font-normal text-mist">Zero recurring API fees.</span>

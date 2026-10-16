@@ -27,7 +27,7 @@ const COLS = [
     h: "Support",
     links: [
       ["Contact & Setup", "/contact"],
-      ["WhatsApp Inquiry", `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about TradesWithAI screeners.")}`],
+      ["WhatsApp Inquiry", `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about ChartNeural screeners.")}`],
     ],
   },
   {
@@ -47,6 +47,7 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.3fr_3fr]">
           <div>
             <Logo />
+            <p className="mt-3 font-mono text-xs tracking-[0.14em] text-lime">{SITE.slogan}</p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-mist">
               Professional stock and crypto screening software you run yourself. Full Python source code, tests, and setup guide included.
             </p>
