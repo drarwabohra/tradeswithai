@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { BrandMark } from "@/components/BrandMark";
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
@@ -35,45 +36,19 @@ export function createOgImage({
         {/* Top: Logo & Badge */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <div
-              style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "12px",
-                background: "linear-gradient(135deg, #41c4e1 0%, #a8e10d 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 0 25px rgba(65, 196, 225, 0.5)",
-              }}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#06202b"
-                strokeWidth="2.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 17l5-6 4 3 8-9" />
-                <path d="M15 5h5v5" />
-              </svg>
-            </div>
+            <BrandMark size={52} />
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                fontSize: "24px",
+                fontSize: "30px",
                 fontWeight: 800,
                 letterSpacing: "-0.02em",
               }}
             >
-              <span>TRADES</span>
-              <span style={{ color: "#a8e10d" }}>WITH</span>
-              <span>AI</span>
+              <span>Chart</span>
+              <span style={{ color: "#a8e10d", marginLeft: "-8px" }}>Neural</span>
             </div>
           </div>
           <div

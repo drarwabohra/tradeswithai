@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   description: "Free trading strategy guides, AI prompts, and backtesting resources. Learn without paywalls.",
   alternates: { canonical: "/resources" },
   openGraph: {
-    title: "Free Resources · TradesWithAI",
+    title: "Free Resources · ChartNeural",
     description: "Free trading strategy guides, AI prompts, and backtesting resources. Learn without paywalls.",
     url: "/resources",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Resources · TradesWithAI",
+    title: "Free Resources · ChartNeural",
     description: "Free trading strategy guides, AI prompts, and backtesting resources. Learn without paywalls.",
   },
 };

@@ -19,23 +19,19 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "TradesWithAI · Algorithmic Stock & Crypto Screeners", template: "%s · TradesWithAI" },
+  title: { default: "ChartNeural · Algorithmic Stock & Crypto Screeners", template: "%s · ChartNeural" },
   description: "Stock and crypto screeners you run yourself. Compare features, watch real demos, and acquire full source code with a one-time payment.",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-icon",
-  },
   openGraph: {
     type: "website",
-    siteName: "TradesWithAI",
-    title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
+    siteName: "ChartNeural",
+    title: "ChartNeural · Algorithmic Stock & Crypto Screeners",
     description: "Stock and crypto screeners you run yourself. Compare features, watch real demos, and acquire full source code with a one-time payment.",
     url: SITE_URL,
     locale: "en_IN",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
+    title: "ChartNeural · Algorithmic Stock & Crypto Screeners",
     description: "Stock and crypto screeners you run yourself. Compare features, watch real demos, and acquire full source code with a one-time payment.",
   },
 };

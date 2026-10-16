@@ -493,7 +493,7 @@ export function StepByStep() {
                   <span className="h-2 w-2 rounded-full bg-mist/40" />
                   <span className="h-2 w-2 rounded-full bg-mist/40" />
                   <span className="ml-3 rounded bg-deep px-3 py-0.5 font-mono text-xs text-dim">
-                    tradeswithai · order dispatch
+                    chartneural · order dispatch
                   </span>
                 </div>
                 <div className="space-y-4 p-6">

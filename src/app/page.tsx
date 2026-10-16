@@ -11,18 +11,18 @@ import {
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
-  title: { absolute: "TradesWithAI · Algorithmic Stock & Crypto Screeners" },
+  title: { absolute: "ChartNeural · Algorithmic Stock & Crypto Screeners" },
   description:
     "Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python source code included. One-time payment.",
   openGraph: {
-    title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
+    title: "ChartNeural · Algorithmic Stock & Crypto Screeners",
     description:
       "Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python source code included. One-time payment.",
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TradesWithAI · Algorithmic Stock & Crypto Screeners",
+    title: "ChartNeural · Algorithmic Stock & Crypto Screeners",
     description:
       "Screen for breakouts, chart patterns, and momentum. Run the tools on your own computer. Full Python source code included. One-time payment.",
   },

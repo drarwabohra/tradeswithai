@@ -19,7 +19,7 @@ export default function NotFound() {
           </Link>
           <a
             href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(
-              "Hi, I have a question about TradesWithAI screeners."
+              "Hi, I have a question about ChartNeural screeners."
             )}`}
             target="_blank"
             rel="noopener noreferrer"

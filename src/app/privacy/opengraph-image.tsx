@@ -2,7 +2,7 @@ import { createOgImage, ogSize, ogContentType } from "@/lib/og";
 
 export const size = ogSize;
 export const contentType = ogContentType;
-export const alt = "Privacy Policy · TradesWithAI";
+export const alt = "Privacy Policy · ChartNeural";
 
 export default function Image() {
   return createOgImage({

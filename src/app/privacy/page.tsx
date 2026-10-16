@@ -4,17 +4,17 @@ import PageHero from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How TradesWithAI handles and protects customer information.",
+  description: "How ChartNeural handles and protects customer information.",
   alternates: { canonical: "/privacy" },
   openGraph: {
-    title: "Privacy Policy · TradesWithAI",
-    description: "How TradesWithAI handles and protects customer information.",
+    title: "Privacy Policy · ChartNeural",
+    description: "How ChartNeural handles and protects customer information.",
     url: "/privacy",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Privacy Policy · TradesWithAI",
-    description: "How TradesWithAI handles and protects customer information.",
+    title: "Privacy Policy · ChartNeural",
+    description: "How ChartNeural handles and protects customer information.",
   },
 };
 
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
             <li>
               WhatsApp:{" "}
               <a
-                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about TradesWithAI screeners.")}`}
+                href={`https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent("Hi, I have a question about ChartNeural screeners.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan underline min-h-[44px] inline-flex items-center"

@@ -5,18 +5,14 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SITE } from "@/lib/site";
 import { catalog } from "@/lib/catalog";
+import { BrandMark } from "./BrandMark";
 
 export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 min-h-[44px]" aria-label={`${SITE.name} home`}>
-      <span className="relative grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-cyan to-lime shadow-[0_0_24px_-4px_rgb(65_196_225/0.7)]">
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="#06202b" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 17l5-6 4 3 8-9" />
-          <path d="M15 5h5v5" />
-        </svg>
-      </span>
-      <span className="text-[0.95rem] font-extrabold tracking-tight">
-        TRADES <span className="text-lime">WITH</span> AI
+      <BrandMark size={32} />
+      <span className="text-[1.1rem] font-extrabold tracking-[-0.02em]">
+        Chart<span className="text-lime">Neural</span>
       </span>
     </Link>
   );
@@ -69,7 +65,7 @@ export default function Header() {
 
   const whatsappMessage = currentProduct
     ? `Hi, I want to buy the ${currentProduct.name}. My OS is: `
-    : "Hi, I have a question about TradesWithAI screeners.";
+    : "Hi, I have a question about ChartNeural screeners.";
 
   const whatsappUrl = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 

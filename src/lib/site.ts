@@ -3,8 +3,9 @@ export const SITE_URL = (
 ).replace(/\/$/, "");
 
 export const SITE = {
-  name: "TradesWithAI",
-  brandName: "TradesWithAI",
+  name: "ChartNeural",
+  brandName: "ChartNeural",
+  slogan: "Find the setup. Own the code.",
   url: SITE_URL,
   tagline: "Stock and crypto screening software you run yourself. Source code included.",
   whatsappNumber: "918529261547",
