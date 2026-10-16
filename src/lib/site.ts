@@ -1,5 +1,5 @@
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://tradeswithai.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://chartneural.vercel.app"
 ).replace(/\/$/, "");
 
 export const SITE = {
