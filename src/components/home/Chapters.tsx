@@ -621,7 +621,7 @@ export function StepByStep() {
                   })}
 
                   <p
-                    className="pt-3 text-xs leading-relaxed text-mist font-mono border-t border-hairline"
+                    className="pt-3 text-sm sm:text-xs leading-relaxed text-mist font-mono border-t border-hairline"
                     style={{ opacity: done ? 1 : 0.25, transition: "opacity .6s" }}
                   >
                     ✓ Package confirmed. Source code zip, installation script, and API configuration notes ready for dispatch.
@@ -640,7 +640,7 @@ export function StepByStep() {
                 </p>
 
                 {/* "How to pay" line */}
-                <div className="rounded-lg border border-hairline bg-deep/80 p-3.5 text-xs text-mist font-mono leading-relaxed">
+                <div className="rounded-lg border border-hairline bg-deep/80 p-3.5 text-sm sm:text-xs text-mist font-mono leading-relaxed">
                   <p className="font-semibold text-ink mb-1">How to pay:</p>
                   <p className="text-mist">Choose your screener, then message us on WhatsApp or email {""}
                     <span className="text-ink">hkausar2910@gmail.com</span>. We share payment details directly.</p>

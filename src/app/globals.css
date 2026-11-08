@@ -585,6 +585,13 @@ footer a {
   }
 }
 
+/* Phones: the smallest text step reads at 13px instead of 12px. Desktop is unchanged. */
+@media (max-width: 639px) {
+  :root {
+    --text-xs: 0.8125rem;
+  }
+}
+
 /* No pinning on tablets, mobile, or reduced motion */
 @media (max-width: 1024px), (prefers-reduced-motion: reduce) {
   .pin {

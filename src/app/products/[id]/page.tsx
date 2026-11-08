@@ -144,7 +144,7 @@ export default async function ProductPage({ params }: Props) {
             {/* 29. How buying works mini-list */}
             <div className="mt-5 border-t border-hairline pt-4">
               <p className="font-mono text-xs uppercase tracking-wider text-ink font-semibold mb-2.5">How buying works</p>
-              <ol className="space-y-1.5 text-xs text-mist list-decimal list-inside leading-relaxed">
+              <ol className="space-y-1.5 text-sm sm:text-xs text-mist list-decimal list-inside leading-relaxed">
                 <li>Message on WhatsApp</li>
                 <li>We check your PC setup</li>
                 <li>Agree payment details on WhatsApp or email</li>
@@ -154,7 +154,7 @@ export default async function ProductPage({ params }: Props) {
             </div>
 
             {/* 30. Disclaimer repeated under price card */}
-            <p className="mt-4 text-[13px] leading-relaxed text-mist border-t border-hairline pt-3">
+            <p className="mt-4 text-sm sm:text-[13px] leading-relaxed text-mist border-t border-hairline pt-3">
               Software for education and analysis only. Not investment advice. We are not a SEBI-registered adviser.
             </p>
           </section>

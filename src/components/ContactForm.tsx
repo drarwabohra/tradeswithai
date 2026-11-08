@@ -49,7 +49,7 @@ export default function ContactForm() {
     return (
       <div className="rounded-lg border border-lime/30 bg-lime/10 p-5 text-sm text-lime">
         <p className="font-bold">Opening WhatsApp...</p>
-        <p className="mt-1 text-xs text-mist">
+        <p className="mt-1 text-sm sm:text-xs text-mist">
           If your WhatsApp chat did not open automatically,{" "}
           <a
             href={`https://wa.me/${SITE.whatsappNumber}`}

@@ -37,7 +37,7 @@ export default function ResourcesPage() {
           {/* Guide 1: Master Backtesting Prompt */}
           <Link
             href="/resources/backtest-indicator-with-ai"
-            className="card card-hover group flex flex-col justify-between overflow-hidden p-8 min-h-[44px]"
+            className="card card-hover group flex flex-col justify-between overflow-hidden p-6 sm:p-8 min-h-[44px]"
             style={{ ["--hc" as string]: "#41c4e1" }}
           >
             <div>
@@ -53,9 +53,9 @@ export default function ResourcesPage() {
                 realistic execution, slippage, and a self-contained HTML report with inline SVG charts.
               </p>
             </div>
-            <div className="mt-8 flex items-center justify-between border-t border-hairline pt-4">
+            <div className="mt-8 flex flex-col gap-3 border-t border-hairline pt-4 sm:flex-row sm:items-center sm:justify-between">
               <span className="font-mono text-xs text-dim">Read Guide & Copy Prompt</span>
-              <span className="btn-primary !py-2 !px-4 !text-xs min-h-[44px]">Read Guide →</span>
+              <span className="btn-primary justify-center !py-2 !px-4 !text-sm sm:!text-xs min-h-[44px]">Read Guide →</span>
             </div>
           </Link>
 
@@ -63,7 +63,7 @@ export default function ResourcesPage() {
           <a
             href="/resources/super-trend-strategy-report.pdf"
             download
-            className="card card-hover group flex flex-col justify-between overflow-hidden p-8 min-h-[44px]"
+            className="card card-hover group flex flex-col justify-between overflow-hidden p-6 sm:p-8 min-h-[44px]"
             style={{ ["--hc" as string]: "#a8e10d" }}
           >
             <div>
@@ -79,9 +79,9 @@ export default function ResourcesPage() {
                 underwater drawdowns, and cost sensitivity tables.
               </p>
             </div>
-            <div className="mt-8 flex items-center justify-between border-t border-hairline pt-4">
+            <div className="mt-8 flex flex-col gap-3 border-t border-hairline pt-4 sm:flex-row sm:items-center sm:justify-between">
               <span className="font-mono text-xs text-dim">Full PDF Artifact</span>
-              <span className="btn-ghost !py-2 !px-4 !text-xs min-h-[44px]">Download Sample PDF ↓</span>
+              <span className="btn-ghost justify-center !py-2 !px-4 !text-sm sm:!text-xs min-h-[44px]">Download Sample PDF ↓</span>
             </div>
           </a>
         </div>

@@ -51,7 +51,7 @@ export default function Footer() {
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-mist">
               Professional stock and crypto screening software you run yourself. Full Python source code, tests, and setup guide included.
             </p>
-            <p className="mt-6 flex items-center gap-2 font-mono text-xs text-mist">
+            <p className="mt-6 flex items-center gap-2 font-mono text-sm sm:text-xs text-mist">
               <span className="live-dot" /> Code sent within 12 hours of payment confirmation (usually under 1 hour)
             </p>
           </div>

@@ -67,7 +67,7 @@ export default function ContactPage() {
 
             <div className="card p-6">
               <h2 className="text-lg font-bold text-ink mb-1">Prepare your WhatsApp message</h2>
-              <p className="text-xs text-mist mb-5">
+              <p className="text-sm sm:text-xs text-mist mb-5">
                 Fill this in and we&apos;ll open WhatsApp with your message ready to send.
               </p>
               <ContactForm />
@@ -82,7 +82,7 @@ export default function ContactPage() {
               </span>
               <div>
                 <h2 className="text-lg font-bold text-ink">Helpful to include</h2>
-                <p className="text-xs text-mist">Speeds up verification</p>
+                <p className="text-sm sm:text-xs text-mist">Speeds up verification</p>
               </div>
             </div>
 
@@ -105,7 +105,7 @@ export default function ContactPage() {
               </li>
             </ul>
 
-            <div className="rounded-lg border border-hairline bg-abyss/60 p-4 text-xs text-dim leading-relaxed font-mono">
+            <div className="rounded-lg border border-hairline bg-abyss/60 p-4 text-sm sm:text-xs text-dim leading-relaxed font-mono">
               <p className="text-mist font-semibold mb-1">Target Response Time</p>
               Usually under 1 hour, 9am–11pm IST
             </div>
